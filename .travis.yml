@@ -11,9 +11,9 @@ install:
  
     
     # IOS uses v.1.6
-    - wget http://api.appcelerator.net/p/v1/release-download?token=y4qAVWK3 -O /Library/Application\ Support/Titanium/mobilesdk-1.6.0-osx.zip
-    - cd /Library/Application\ Support/Titanium/
-    - unzip -o mobilesdk-1.6.0-osx.zip
+    #- wget http://api.appcelerator.net/p/v1/release-download?token=y4qAVWK3 -O /Library/Application\ Support/Titanium/mobilesdk-1.6.0-osx.zip
+    #- cd /Library/Application\ Support/Titanium/
+    #- unzip -o mobilesdk-1.6.0-osx.zip
 
     # Install Android SDK
     - cd /Library/Application\ Support/Titanium/sdks/
