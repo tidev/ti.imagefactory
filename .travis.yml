@@ -39,7 +39,7 @@ install:
     - export ANDROID_NDK=${PWD}/android-ndk-r8c
     
     # install py markdown
-    easy_install Markdown
+    - easy_install Markdown
     
 before_script:
     - cd $MODULE_ROOT
