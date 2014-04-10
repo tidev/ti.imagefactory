@@ -6,9 +6,10 @@ install:
     - mkdir -p python
     
     # install py markdown
+    - pip install -r requirements.txt
     #- cd $MODULE_ROOT/python
     #- wget https://raw.githubusercontent.com/adesugbaa/python-markdown2/master/lib/markdown2.py
-    - export PYTHONPATH=${PYTHONPATH}:$PWD/support
+    #- export PYTHONPATH=${PYTHONPATH}:$PWD/support
     
     # Android SDK seems to require newer version of SDK
     - wget http://api.appcelerator.net/p/v1/release-download?token=34yycjh6 -O /Library/Application\ Support/Titanium/mobilesdk-2.1.3.GA-osx.zip
