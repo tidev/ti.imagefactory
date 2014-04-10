@@ -1,0 +1,2 @@
+This folder is required by the build process even if no
+3rd party libraries are being used in the module.
