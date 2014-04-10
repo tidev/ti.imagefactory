@@ -39,7 +39,9 @@ install:
     - export ANDROID_NDK=${PWD}/android-ndk-r8c
     
     # install py markdown
-    - easy_install Markdown
+    - cd $MODULE_ROOT
+    - wget https://github.com/trentm/python-markdown2/blob/master/lib/markdown2.py
+    - export PYTHONPATH=${PYTHONPATH}:${$MODULE_ROOT}
     
 before_script:
     - cd $MODULE_ROOT
