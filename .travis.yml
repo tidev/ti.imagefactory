@@ -4,7 +4,11 @@ before_install:
 install: 
     - mkdir -p /Library/Application\ Support/Titanium/sdks/
     - mkdir -p python
-    - pip install Markdown
+    
+    # install py markdown
+    - cd $MODULE_ROOT/python
+    - wget https://raw.githubusercontent.com/adesugbaa/python-markdown2/master/lib/markdown2.py
+    - export PYTHONPATH=${PYTHONPATH}:$PWD
     
     # Android SDK seems to require newer version of SDK
     - wget http://api.appcelerator.net/p/v1/release-download?token=34yycjh6 -O /Library/Application\ Support/Titanium/mobilesdk-2.1.3.GA-osx.zip
@@ -39,11 +43,6 @@ install:
     - wget http://dl.google.com/android/ndk/android-ndk-r8c-darwin-x86.tar.bz2
     - tar xzf android-ndk-r8c-darwin-x86.tar.bz2
     - export ANDROID_NDK=${PWD}/android-ndk-r8c
-    
-    # install py markdown
-    #- cd $MODULE_ROOT/python
-    #- wget https://github.com/trentm/python-markdown2/blob/master/lib/markdown2.py
-    #- export PYTHONPATH=${PYTHONPATH}:$PWD
     
 before_script:
     - cd $MODULE_ROOT
