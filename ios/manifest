@@ -15,4 +15,4 @@ name: imagefactory
 moduleid: ti.imagefactory
 guid: 0aab25d7-0486-40ab-94a3-ed4f9a293414
 platform: iphone
-minsdk: 2.1.3.GA
+minsdk: 3.2.2.GA
