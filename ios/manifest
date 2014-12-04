@@ -2,12 +2,13 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.1.1
+version: 1.2.0
 apiversion: 2
+architectures: armv7 i386 x86_64 arm64
 description: Image Factory
 author: Jeff English
 license: Apache License, Version 2.0
-copyright: Copyright (c) 2013 by Appcelerator,  Inc.
+copyright: Copyright (c) 2013-2014 by Appcelerator,  Inc.
 
 
 # these should not be edited
@@ -15,4 +16,4 @@ name: imagefactory
 moduleid: ti.imagefactory
 guid: 0aab25d7-0486-40ab-94a3-ed4f9a293414
 platform: iphone
-minsdk: 3.2.2.GA
+minsdk: 3.4.1.GA
