@@ -8,7 +8,7 @@
 
 #import "TiUIImage+Rotate.h"
 
-@implementation UIImage (Rotate)
+@implementation TiUIImageRotate
 
 static CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
 
