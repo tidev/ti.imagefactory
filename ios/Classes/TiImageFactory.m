@@ -9,6 +9,7 @@
 #import "TiUIImage+Resize.h"
 #import "TiUIImage+RoundedCorner.h"
 #import "TiUIImage+Alpha.h"
+#import "TiUIImage+Rotate.h"
 
 @implementation TiImageFactory
 
@@ -98,6 +99,17 @@
 	}
 	
 	return nil;
+}
+
++(UIImage*)imageRotate:(UIImage*)image withArgs:(NSDictionary*)args
+{
+    if (image) {
+        NSInteger degrees = [TiUtils intValue:@"degrees" properties:args def:1];
+        
+        return [TiUIImageRotate rotateImage:degrees image:image];
+    }
+    
+    return nil;
 }
 
 @end

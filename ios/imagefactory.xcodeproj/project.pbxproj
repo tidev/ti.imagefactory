@@ -36,6 +36,8 @@
 		A2E88F8A141EBC8F00A41FB3 /* TiImageFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E88F88141EBC8F00A41FB3 /* TiImageFactory.m */; };
 		AA747D9F0F9514B9006C5449 /* TiImagefactory_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* TiImagefactory_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		E347C96C1B4AF25C00BE8DBA /* TiUIImage+Rotate.h in Headers */ = {isa = PBXBuildFile; fileRef = E347C96A1B4AF25C00BE8DBA /* TiUIImage+Rotate.h */; };
+		E347C96D1B4AF25C00BE8DBA /* TiUIImage+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = E347C96B1B4AF25C00BE8DBA /* TiUIImage+Rotate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,8 @@
 		AA747D9E0F9514B9006C5449 /* TiImagefactory_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiImagefactory_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libTiImagefactory.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTiImagefactory.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E347C96A1B4AF25C00BE8DBA /* TiUIImage+Rotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TiUIImage+Rotate.h"; sourceTree = "<group>"; };
+		E347C96B1B4AF25C00BE8DBA /* TiUIImage+Rotate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TiUIImage+Rotate.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +142,8 @@
 				A26B53E21420F51A00545AFF /* TiUIImage+Resize.m */,
 				A26B53E31420F51A00545AFF /* TiUIImage+RoundedCorner.h */,
 				A26B53E41420F51A00545AFF /* TiUIImage+RoundedCorner.m */,
+				E347C96A1B4AF25C00BE8DBA /* TiUIImage+Rotate.h */,
+				E347C96B1B4AF25C00BE8DBA /* TiUIImage+Rotate.m */,
 			);
 			name = UIImage;
 			path = Classes/UIImage;
@@ -151,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA747D9F0F9514B9006C5449 /* TiImagefactory_Prefix.pch in Headers */,
+				E347C96C1B4AF25C00BE8DBA /* TiUIImage+Rotate.h in Headers */,
 				24DD6CF91134B3F500162E58 /* TiImagefactoryModule.h in Headers */,
 				24DE9E1111C5FE74003F90F6 /* TiImagefactoryModuleAssets.h in Headers */,
 				A2E88F89141EBC8F00A41FB3 /* TiImageFactory.h in Headers */,
@@ -186,7 +193,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0640;
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "imagefactory" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -235,6 +242,7 @@
 				A2E88F8A141EBC8F00A41FB3 /* TiImageFactory.m in Sources */,
 				A26B53E61420F51A00545AFF /* TiUIImage+Alpha.m in Sources */,
 				A26B53E81420F51A00545AFF /* TiUIImage+Resize.m in Sources */,
+				E347C96D1B4AF25C00BE8DBA /* TiUIImage+Rotate.m in Sources */,
 				A26B53EA1420F51A00545AFF /* TiUIImage+RoundedCorner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,7 +366,7 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-DDEBUG",
 					"-DTI_POST_1_2",
@@ -369,6 +377,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
+				TITANIUM_SDK_VERSION = 4.0.0.GA;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
@@ -409,6 +418,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
+				TITANIUM_SDK_VERSION = 4.0.0.GA;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;

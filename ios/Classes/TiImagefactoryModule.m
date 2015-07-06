@@ -73,7 +73,8 @@ typedef enum {
 	kTransformThumbnail,
 	kTransformRoundedCorner,
 	kTransformTransparentBorder,
-	kTransformAlpha
+	kTransformAlpha,
+    kTransformRotate
 } TransformType;
 
 MAKE_SYSTEM_PROP(TRANSFORM_CROP,kTransformCrop);
@@ -82,6 +83,7 @@ MAKE_SYSTEM_PROP(TRANSFORM_THUMBNAIL,kTransformThumbnail);
 MAKE_SYSTEM_PROP(TRANSFORM_ROUNDEDCORNER,kTransformRoundedCorner);
 MAKE_SYSTEM_PROP(TRANSFORM_TRANSPARENTBORDER,kTransformTransparentBorder);
 MAKE_SYSTEM_PROP(TRANSFORM_ALPHA,kTransformAlpha);
+MAKE_SYSTEM_PROP(TRANSFORM_ROTATE,kTransformRotate);
 
 MAKE_SYSTEM_PROP(QUALITY_DEFAULT,kCGInterpolationDefault);
 MAKE_SYSTEM_PROP(QUALITY_NONE,kCGInterpolationNone);
@@ -106,6 +108,8 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH,kCGInterpolationHigh);
 			return [TiImageFactory imageTransparentBorder:image withArgs:args];
 		case kTransformAlpha:
 			return [TiImageFactory imageAlpha:image withArgs:args];
+        case kTransformRotate:
+            return [TiImageFactory imageRotate:image withArgs:args];
 	}
 	
 	return image;
@@ -131,6 +135,11 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH,kCGInterpolationHigh);
 
 
 #pragma mark Public Image Methods
+
+-(id)imageWithRotation:(id)args
+{
+    return [TiImagefactoryModule imageTransform:kTransformRotate withArgs:args];
+}
 
 -(id)imageWithAlpha:(id)args
 {
