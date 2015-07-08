@@ -14,8 +14,22 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Matrix;
 
 public class ImageFactory {
+
+	public static Bitmap imageRotate(Bitmap image, KrollDict args)
+	{
+		if (image != null) {
+			
+			Matrix matrix = new Matrix();
+			matrix.postRotate(args.optInt("degrees", 90));
+
+			return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+		}
+
+		return null;
+	}
 	
 	public static Bitmap imageCrop(Bitmap image, KrollDict args)
 	{

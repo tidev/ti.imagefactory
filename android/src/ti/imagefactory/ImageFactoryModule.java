@@ -42,6 +42,7 @@ public class ImageFactoryModule extends KrollModule
 	@Kroll.constant public static final int TRANSFORM_ROUNDEDCORNER = 4;
 	@Kroll.constant public static final int TRANSFORM_TRANSPARENTBORDER = 5;
 	@Kroll.constant public static final int TRANSFORM_ALPHA = 6;
+	@Kroll.constant public static final int TRANSFORM_ROTATE = 7;
 
 	// Quality constants defined to match iOS values
 	// Not current used, but exposed for API parity
@@ -76,6 +77,8 @@ public class ImageFactoryModule extends KrollModule
 				return ImageFactory.imageTransparentBorder(image, args);
 			case TRANSFORM_ALPHA:
 				return ImageFactory.imageAlpha(image, args);
+			case TRANSFORM_ROTATE:
+				return ImageFactory.imageRotate(image, args);
 		}
 	
 		return image;
@@ -150,6 +153,12 @@ public class ImageFactoryModule extends KrollModule
 	}
 
  	// Public Image Methods
+
+	@Kroll.method
+	public TiBlob imageWithRotation(TiBlob blob, HashMap args)
+	{
+		return imageTransform(TRANSFORM_ROTATE, blob, new KrollDict(args));
+	}
 
 	@Kroll.method
 	public TiBlob imageWithAlpha(TiBlob blob, HashMap args)

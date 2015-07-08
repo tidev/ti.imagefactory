@@ -1,0 +1,5 @@
+.DS_Store
+build
+xcuserdata
+project.xcworkspace
+ti.imagefactory-iphone-*

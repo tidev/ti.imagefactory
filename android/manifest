@@ -2,13 +2,13 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 2.2.1
+version: 2.3.0
 apiversion: 2
 description: Image Factory
 author: Jeff English
 license: Apache License, Version 2.0
 copyright: Copyright (c) 2013 by Appcelerator,  Inc.
-
+architectures: armeabi armeabi-v7a x86
 
 # these should not be edited
 name: imagefactory
