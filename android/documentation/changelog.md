@@ -1,5 +1,7 @@
 # Change Log
 <pre>
+v2.2.2	[MOD-2166] Recompiled module to solve crashes in Android 6.0
+
 v2.2.1	[MOD-940] Building with 2.1.3.GA and open sourcing
 	
 v2.2	[MOD-447] Introduced "format" property. Default format is now JPEG, allowing for compression. Check out documentation to learn more.
