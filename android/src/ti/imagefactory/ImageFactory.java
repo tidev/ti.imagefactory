@@ -25,7 +25,14 @@ public class ImageFactory {
 			Matrix matrix = new Matrix();
 			matrix.postRotate(args.optInt("degrees", 90));
 
-			return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+			Bitmap newImage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+
+			if (newImage != image && !image.isRecycled()) {
+				image.recycle();
+				image = null;
+			}
+			
+			return newImage;
 		}
 
 		return null;
@@ -39,7 +46,14 @@ public class ImageFactory {
 			int x = args.optInt("x", (image.getWidth() - width) / 2);
 			int y = args.optInt("y", (image.getHeight() - height) / 2);
 			
-			return Bitmap.createBitmap(image, x, y, width, height);
+			Bitmap newImage = Bitmap.createBitmap(image, x, y, width, height);
+
+			if (newImage != image && !image.isRecycled()) {
+				image.recycle();
+				image = null;
+			}
+			
+			return newImage;
 		}
 		
 		return null;
@@ -50,8 +64,15 @@ public class ImageFactory {
 		if (image != null) {
 			int width = args.optInt("width", image.getWidth());
 			int height = args.optInt("height", image.getHeight());
-						
-			return Bitmap.createScaledBitmap(image, width, height, true);
+			
+			Bitmap newImage = Bitmap.createScaledBitmap(image, width, height, true);
+
+			if (newImage != image && !image.isRecycled()) {
+				image.recycle();
+				image = null;
+			}
+			
+			return newImage;
 		}
 		
 		return null;
@@ -100,7 +121,12 @@ public class ImageFactory {
 			tempBitmap.recycle();
 			tempBitmap = null;
 
-		    return resultBitmap;			
+			if (!image.isRecycled()) {
+				image.recycle();
+				image = null;
+			}
+
+		  return resultBitmap;			
 		}
 		
 		return null;
@@ -128,7 +154,12 @@ public class ImageFactory {
 			// Draw the image to the canvas (clipped to the path)
 			canvas.drawBitmap(image, 0, 0, null);
 
-		    return resultBitmap;
+			if (!image.isRecycled()) {
+				image.recycle();
+				image = null;
+			}
+
+		  return resultBitmap;
 		}
 		
 		return null;
@@ -146,6 +177,11 @@ public class ImageFactory {
 			// Draw the image to the canvas (offset by the border size)
 			canvas.drawBitmap(image, (float)borderSize, (float)borderSize, null);
 			
+			if (!image.isRecycled()) {
+				image.recycle();
+				image = null;
+			}
+
 			return resultBitmap;
 		}
 		
@@ -163,6 +199,11 @@ public class ImageFactory {
 			// Create a new bitmap that supports alpha
 			Bitmap resultBitmap = image.copy(Bitmap.Config.ARGB_8888, false);
 			
+			if (resultBitmap != image && !image.isRecycled()) {
+				image.recycle();
+				image = null;
+			}
+
 			return resultBitmap;
 		}
 		
