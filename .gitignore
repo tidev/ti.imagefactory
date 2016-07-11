@@ -1,0 +1,5 @@
+.DS_Store
+android/build.properties
+android/build/
+android/dist/
+android/libs/
