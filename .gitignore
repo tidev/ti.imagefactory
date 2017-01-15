@@ -3,3 +3,5 @@ android/build.properties
 android/build/
 android/dist/
 android/libs/
+/ios/imagefactory.xcodeproj/project.xcworkspace
+/ios/imagefactory.xcodeproj/xcuserdata

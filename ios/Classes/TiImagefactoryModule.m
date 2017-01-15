@@ -106,9 +106,10 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH,kCGInterpolationHigh);
 			return [TiImageFactory imageTransparentBorder:image withArgs:args];
 		case kTransformAlpha:
 			return [TiImageFactory imageAlpha:image withArgs:args];
-	}
-	
-	return image;
+		case kTransformNone:
+		default:
+			return image;
+	}	
 }
 
 +(id)imageTransform:(TransformType)type withArgs:(id)args
