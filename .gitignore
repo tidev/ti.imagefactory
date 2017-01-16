@@ -1,0 +1,10 @@
+.DS_Store
+android/build.properties
+android/build/
+android/dist/
+android/libs/
+/ios/imagefactory.xcodeproj/project.xcworkspace
+/ios/imagefactory.xcodeproj/xcuserdata
+/ios/build
+/ios/Classes/TiImagefactoryModuleAssets.m
+/ios/metadata.json

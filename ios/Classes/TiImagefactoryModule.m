@@ -108,11 +108,12 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH,kCGInterpolationHigh);
 			return [TiImageFactory imageTransparentBorder:image withArgs:args];
 		case kTransformAlpha:
 			return [TiImageFactory imageAlpha:image withArgs:args];
-        case kTransformRotate:
-            return [TiImageFactory imageRotate:image withArgs:args];
+    case kTransformRotate:
+        return [TiImageFactory imageRotate:image withArgs:args];
+    case kTransformNone:
+		default:
+			return image;
 	}
-	
-	return image;
 }
 
 +(id)imageTransform:(TransformType)type withArgs:(id)args
