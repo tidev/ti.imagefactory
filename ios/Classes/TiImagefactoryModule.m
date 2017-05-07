@@ -34,34 +34,7 @@
 	// you *must* call the superclass
 	[super startup];
 	
-	NSLog(@"[INFO] %@ loaded",self);
-}
-
--(void)shutdown:(id)sender
-{
-	// this method is called when the module is being unloaded
-	// typically this is during shutdown. make sure you don't do too
-	// much processing here or the app will be quit forceably
-	
-	// you *must* call the superclass
-	[super shutdown:sender];
-}
-
-#pragma mark Cleanup 
-
--(void)dealloc
-{
-	// release any resources that have been retained by the module
-	[super dealloc];
-}
-
-#pragma mark Internal Memory Management
-
--(void)didReceiveMemoryWarning:(NSNotification*)notification
-{
-	// optionally release any resources that can be dynamically
-	// reloaded once memory is available - such as caches
-	[super didReceiveMemoryWarning:notification];
+	NSLog(@"[DEBUG] %@ loaded",self);
 }
 
 #pragma system properties
@@ -137,12 +110,12 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH,kCGInterpolationHigh);
 
 #pragma mark Public Image Methods
 
--(id)imageWithRotation:(id)args
+- (id)imageWithRotation:(id)args
 {
     return [TiImagefactoryModule imageTransform:kTransformRotate withArgs:args];
 }
 
--(id)imageWithAlpha:(id)args
+- (id)imageWithAlpha:(id)args
 {
 	return [TiImagefactoryModule imageTransform:kTransformAlpha withArgs:args];
 }
@@ -161,17 +134,17 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH,kCGInterpolationHigh);
 {
 	return [TiImagefactoryModule imageTransform:kTransformThumbnail withArgs:args];}
 
--(id)imageAsResized:(id)args
+- (id)imageAsResized:(id)args
 {
 	return [TiImagefactoryModule imageTransform:kTransformResize withArgs:args];
 }
 
--(id)imageAsCropped:(id)args
+- (id)imageAsCropped:(id)args
 {
 	return [TiImagefactoryModule imageTransform:kTransformCrop withArgs:args];
 }
 
--(id)imageTransform:(id)args
+- (id)imageTransform:(id)args
 {
 	enum Args {
 		kArgBlob = 0,
@@ -196,7 +169,7 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH,kCGInterpolationHigh);
 	return image ? [[[TiBlob alloc] initWithImage:image] autorelease] : nil;
 }
 
--(id)compress:(id)args
+- (id)compress:(id)args
 {
 	enum Args {
 		kArgBlob = 0,

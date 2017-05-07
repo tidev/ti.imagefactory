@@ -1,8 +1,8 @@
 # Change Log
 <pre>
-v2.3.1 Fixed images not being recycled properly.
+v3.1.0  Added image rotation functionality, fixed images not being recycled properly.
 
-v2.3.0 Added image rotation functionality.
+v3.0.0  Rebuild module for SDK 6+ compatibility
 
 v2.2.2	[MOD-2166] Recompiled module to solve crashes in Android 6.0
 

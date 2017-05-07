@@ -1,6 +1,6 @@
 # Change Log
 <pre>
-v1.3.0 Added image rotation functionality.
+v1.3.0  Added image rotation functionality.
 
 v1.2.0  [TIMOB-18092] Updated to build for 64bit
 
