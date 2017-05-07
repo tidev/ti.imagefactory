@@ -17,6 +17,16 @@ To access this module from JavaScript, you would do the following:
 
 ## Functions
 
+### imageWithRotation
+
+Creates a new image by creating a copy of the given image that is rotated.
+
+#### Arguments
+
+* Image blob[blob]: Image to transform
+* Options[dictionary]: A dictionary specifying the options for the transformation
+    * degrees[int]: The degrees to rotate the image (default: 90)
+
 ### imageWithAlpha
 
 Creates a new image by creating a copy of the given image, adding an alpha channel if it doesn't already have one.

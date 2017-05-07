@@ -13,5 +13,6 @@
 +(UIImage*)imageRoundedCorner:(UIImage*)image withArgs:(NSDictionary*)args;
 +(UIImage*)imageTransparentBorder:(UIImage*)image withArgs:(NSDictionary*)args;
 +(UIImage*)imageAlpha:(UIImage*)image withArgs:(NSDictionary*)args;
++(UIImage*)imageRotate:(UIImage*)image withArgs:(NSDictionary*)args;
 
 @end
