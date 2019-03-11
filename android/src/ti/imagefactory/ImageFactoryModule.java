@@ -11,12 +11,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.titanium.TiApplication;
 
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.io.TiBaseFile;
@@ -25,6 +27,7 @@ import org.appcelerator.titanium.view.TiDrawableReference;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 
@@ -152,7 +155,60 @@ public class ImageFactoryModule extends KrollModule
 		return result;
 	}
 
- 	// Public Image Methods
+	private String convertPath(String path) {
+		if (path.startsWith("file://") || path.startsWith("content://") || path.startsWith("appdata://")
+				|| path.startsWith("appdata-private://")) {
+			path = path.replaceAll("file://", "");
+			path = path.replaceAll("content://", "");
+			path = path.replaceAll("appdata:///?", "/mnt/sdcard/" + TiApplication.getInstance().getPackageName() + "/");
+			path = path.replaceAll("appdata-private:///?",
+					"/data/data/" + TiApplication.getInstance().getPackageName() + "/app_appdata/");
+		}
+		return path;
+	}
+
+	 // Public Image Methods
+	 @Kroll.method
+	public TiBlob fixOrientation(TiBlob blob, String filename) {
+
+		ExifInterface Exif = null;
+		int orientation = ExifInterface.ORIENTATION_NORMAL;
+		KrollDict args = null;
+
+		try {
+			filename = convertPath(filename);
+			Exif = new ExifInterface(filename);
+		} catch (IOException e) {
+			Log.e(LCAT, "IO Exception occured, file probably does not exist.");
+		}
+
+		if (Exif != null)
+			orientation = Exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+		switch (orientation) {
+		case ExifInterface.ORIENTATION_ROTATE_90:
+			args = new KrollDict();
+			args.put("degrees", "90");
+			break;
+		case ExifInterface.ORIENTATION_ROTATE_180:
+			args = new KrollDict();
+			args.put("degrees", "180");
+			break;
+
+		case ExifInterface.ORIENTATION_ROTATE_270:
+			args = new KrollDict();
+			args.put("degrees", "270");
+			break;
+		}
+
+		if (args != null) {
+			return imageTransform(TRANSFORM_ROTATE, blob, args);
+		} else {
+			args = new KrollDict();
+			args.put("degrees", "0");
+			return imageTransform(TRANSFORM_ROTATE, blob, args);
+		}
+	}
 
 	@Kroll.method
 	public TiBlob imageWithRotation(TiBlob blob, HashMap args)
