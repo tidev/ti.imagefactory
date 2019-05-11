@@ -13,6 +13,6 @@ copyright: Copyright (c) 2013-2017 by Appcelerator,  Inc.
 # these should not be edited
 name: imagefactory
 moduleid: ti.imagefactory
-guid: 0aab25d7-0486-40ab-94a3-ed4f9a293414
+guid: 7e931244-295e-45d1-8cb5-98d66b6ba18f
 platform: android
 minsdk: 7.0.0

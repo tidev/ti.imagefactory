@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
@@ -27,116 +28,129 @@ import org.appcelerator.titanium.view.TiDrawableReference;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
+import android.support.media.ExifInterface;
+import android.os.Build;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 
-@Kroll.module(name="ImageFactory", id="ti.imagefactory")
-public class ImageFactoryModule extends KrollModule
-{
+@Kroll.module(name = "ImageFactory", id = "ti.imagefactory")
+public class ImageFactoryModule extends KrollModule {
 	// Standard Debugging variables
 	private static final String LCAT = "ImageFactoryModule";
 
 	// Transform constants defined to match iOS values
-	@Kroll.constant public static final int TRANSFORM_NONE = 0;
-	@Kroll.constant public static final int TRANSFORM_CROP = 1;
-	@Kroll.constant public static final int TRANSFORM_RESIZE = 2;
-	@Kroll.constant public static final int TRANSFORM_THUMBNAIL = 3;
-	@Kroll.constant public static final int TRANSFORM_ROUNDEDCORNER = 4;
-	@Kroll.constant public static final int TRANSFORM_TRANSPARENTBORDER = 5;
-	@Kroll.constant public static final int TRANSFORM_ALPHA = 6;
-	@Kroll.constant public static final int TRANSFORM_ROTATE = 7;
+	@Kroll.constant
+	public static final int TRANSFORM_NONE = 0;
+	@Kroll.constant
+	public static final int TRANSFORM_CROP = 1;
+	@Kroll.constant
+	public static final int TRANSFORM_RESIZE = 2;
+	@Kroll.constant
+	public static final int TRANSFORM_THUMBNAIL = 3;
+	@Kroll.constant
+	public static final int TRANSFORM_ROUNDEDCORNER = 4;
+	@Kroll.constant
+	public static final int TRANSFORM_TRANSPARENTBORDER = 5;
+	@Kroll.constant
+	public static final int TRANSFORM_ALPHA = 6;
+	@Kroll.constant
+	public static final int TRANSFORM_ROTATE = 7;
 
 	// Quality constants defined to match iOS values
 	// Not current used, but exposed for API parity
-	@Kroll.constant public static final int QUALITY_DEFAULT = 0;
-	@Kroll.constant public static final int QUALITY_NONE = 1;	
-	@Kroll.constant public static final int QUALITY_LOW = 2;
-	@Kroll.constant public static final int QUALITY_MEDIUM = 4;
-	@Kroll.constant public static final int QUALITY_HIGH = 3;
-	
+	@Kroll.constant
+	public static final int QUALITY_DEFAULT = 0;
+	@Kroll.constant
+	public static final int QUALITY_NONE = 1;
+	@Kroll.constant
+	public static final int QUALITY_LOW = 2;
+	@Kroll.constant
+	public static final int QUALITY_MEDIUM = 4;
+	@Kroll.constant
+	public static final int QUALITY_HIGH = 3;
+
 	// Image format
-	@Kroll.constant public static final int JPEG = 0;
-	@Kroll.constant public static final int PNG = 1;
-	
+	@Kroll.constant
+	public static final int JPEG = 0;
+	@Kroll.constant
+	public static final int PNG = 1;
+
 	public ImageFactoryModule() {
 		super();
 	}
 
 	// Image Transform Helpers
-	
-	private Bitmap imageTransform(int type, Bitmap image, KrollDict args)
-	{
+
+	private Bitmap imageTransform(int type, Bitmap image, KrollDict args) {
 		switch (type) {
-			case TRANSFORM_CROP:
-				return ImageFactory.imageCrop(image, args);
-			case TRANSFORM_RESIZE:
-				return ImageFactory.imageResize(image, args);
-			case TRANSFORM_THUMBNAIL:
-				return ImageFactory.imageThumbnail(image, args);
-			case TRANSFORM_ROUNDEDCORNER:
-				return ImageFactory.imageRoundedCorner(image, args);
-			case TRANSFORM_TRANSPARENTBORDER:
-				return ImageFactory.imageTransparentBorder(image, args);
-			case TRANSFORM_ALPHA:
-				return ImageFactory.imageAlpha(image, args);
-			case TRANSFORM_ROTATE:
-				return ImageFactory.imageRotate(image, args);
+		case TRANSFORM_CROP:
+			return ImageFactory.imageCrop(image, args);
+		case TRANSFORM_RESIZE:
+			return ImageFactory.imageResize(image, args);
+		case TRANSFORM_THUMBNAIL:
+			return ImageFactory.imageThumbnail(image, args);
+		case TRANSFORM_ROUNDEDCORNER:
+			return ImageFactory.imageRoundedCorner(image, args);
+		case TRANSFORM_TRANSPARENTBORDER:
+			return ImageFactory.imageTransparentBorder(image, args);
+		case TRANSFORM_ALPHA:
+			return ImageFactory.imageAlpha(image, args);
+		case TRANSFORM_ROTATE:
+			return ImageFactory.imageRotate(image, args);
 		}
-	
+
 		return image;
 	}
-	
+
 	private CompressFormat getFormat(KrollDict args) {
 		int format = args.optInt("format", JPEG);
 		switch (format) {
-			case ImageFactoryModule.PNG:
-				return CompressFormat.PNG;
-			case ImageFactoryModule.JPEG:
-				return CompressFormat.JPEG;
-			default:
-				Log.e(LCAT, "Unknown format provided! Defaulting to JPEG!");
-				return CompressFormat.JPEG;
+		case ImageFactoryModule.PNG:
+			return CompressFormat.PNG;
+		case ImageFactoryModule.JPEG:
+			return CompressFormat.JPEG;
+		default:
+			Log.e(LCAT, "Unknown format provided! Defaulting to JPEG!");
+			return CompressFormat.JPEG;
 		}
 	}
-	
+
 	private String getStringFormat(CompressFormat format) {
 		switch (format) {
-			case PNG:
-				return "image/png";
-			case JPEG:
-			default:
-				return "image/jpeg";
+		case PNG:
+			return "image/png";
+		case JPEG:
+		default:
+			return "image/jpeg";
 		}
 	}
-	
+
 	private int getQuality(KrollDict args) {
 		if (!args.containsKey("quality"))
 			return 70;
-		return (int)(Float.parseFloat(args.getString("quality")) * 100);
+		return (int) (Float.parseFloat(args.getString("quality")) * 100);
 	}
-	
+
 	private void coerceDimensionsIntoBlob(Bitmap image, TiBlob blob) {
 		try {
 			Field field = TiBlob.class.getDeclaredField("width");
 			field.setAccessible(true);
-		    field.setInt(blob, image.getWidth());
+			field.setInt(blob, image.getWidth());
 			field = TiBlob.class.getDeclaredField("height");
 			field.setAccessible(true);
-		    field.setInt(blob, image.getHeight());
+			field.setInt(blob, image.getHeight());
 		} catch (Exception e) {
 			// ** cry **
 		}
 	}
 
-	private TiBlob imageTransform(int type, TiBlob blob, KrollDict args)
-	{
+	private TiBlob imageTransform(int type, TiBlob blob, KrollDict args) {
 		TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), blob);
 		Bitmap image = imageTransform(type, ref.getBitmap(), args);
 
 		if (image == null)
 			return null;
-		
+
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		byte data[] = new byte[0];
 		CompressFormat format = getFormat(args);
@@ -151,142 +165,129 @@ public class ImageFactoryModule extends KrollModule
 		image.recycle();
 		image = null;
 		ref = null;
-		
+
 		return result;
 	}
 
-	private String convertPath(String path) {
-		if (path.startsWith("file://") || path.startsWith("content://") || path.startsWith("appdata://")
-				|| path.startsWith("appdata-private://")) {
-			path = path.replaceAll("file://", "");
-			path = path.replaceAll("content://", "");
-			path = path.replaceAll("appdata:///?", "/mnt/sdcard/" + TiApplication.getInstance().getPackageName() + "/");
-			path = path.replaceAll("appdata-private:///?",
-					"/data/data/" + TiApplication.getInstance().getPackageName() + "/app_appdata/");
-		}
-		return path;
-	}
+	@Kroll.method
+	public TiBlob fixOrientation(TiBlob blob) {
 
-	 // Public Image Methods
-	 @Kroll.method
-	public TiBlob fixOrientation(TiBlob blob, String filename) {
-
-		ExifInterface Exif = null;
-		int orientation = ExifInterface.ORIENTATION_NORMAL;
-		KrollDict args = null;
+		InputStream inputStream = null;
 
 		try {
-			filename = convertPath(filename);
-			Exif = new ExifInterface(filename);
+
+			inputStream = blob.getInputStream();
+			ExifInterface Exif = new ExifInterface(inputStream);
+
+			int orientation = Exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+			KrollDict dict = new KrollDict();
+
+			switch (orientation) {
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				dict.put("degrees", "90");
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				dict.put("degrees", "180");
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				dict.put("degrees", "270");
+				break;
+			default:
+				dict.put("degrees", "0");
+			}
+
+			blob = imageTransform(TRANSFORM_ROTATE, blob, dict);
+
 		} catch (IOException e) {
 			Log.e(LCAT, "IO Exception occured, file probably does not exist.");
+
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+				}
+				inputStream = null;
+			}
 		}
 
-		if (Exif != null)
-			orientation = Exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-		switch (orientation) {
-		case ExifInterface.ORIENTATION_ROTATE_90:
-			args = new KrollDict();
-			args.put("degrees", "90");
-			break;
-		case ExifInterface.ORIENTATION_ROTATE_180:
-			args = new KrollDict();
-			args.put("degrees", "180");
-			break;
-
-		case ExifInterface.ORIENTATION_ROTATE_270:
-			args = new KrollDict();
-			args.put("degrees", "270");
-			break;
-		}
-
-		if (args != null) {
-			return imageTransform(TRANSFORM_ROTATE, blob, args);
-		} else {
-			args = new KrollDict();
-			args.put("degrees", "0");
-			return imageTransform(TRANSFORM_ROTATE, blob, args);
-		}
+		return blob;
 	}
 
 	@Kroll.method
-	public TiBlob imageWithRotation(TiBlob blob, HashMap args)
-	{
+	public TiBlob imageWithRotation(TiBlob blob, HashMap args) {
 		return imageTransform(TRANSFORM_ROTATE, blob, new KrollDict(args));
 	}
 
 	@Kroll.method
-	public TiBlob imageWithAlpha(TiBlob blob, HashMap args)
-	{
+	public TiBlob imageWithAlpha(TiBlob blob, HashMap args) {
 		return imageTransform(TRANSFORM_ALPHA, blob, new KrollDict(args));
 	}
 
 	@Kroll.method
-	public TiBlob imageWithTransparentBorder(TiBlob blob, HashMap args)
-	{
+	public TiBlob imageWithTransparentBorder(TiBlob blob, HashMap args) {
 		return imageTransform(TRANSFORM_TRANSPARENTBORDER, blob, new KrollDict(args));
 	}
-	
+
 	@Kroll.method
-	public TiBlob imageWithRoundedCorner(TiBlob blob, HashMap args)
-	{
+	public TiBlob imageWithRoundedCorner(TiBlob blob, HashMap args) {
 		return imageTransform(TRANSFORM_ROUNDEDCORNER, blob, new KrollDict(args));
 	}
-	
+
 	@Kroll.method
-	public TiBlob imageAsThumbnail(TiBlob blob, HashMap args)
-	{
+	public TiBlob imageAsThumbnail(TiBlob blob, HashMap args) {
 		return imageTransform(TRANSFORM_THUMBNAIL, blob, new KrollDict(args));
 	}
-	
+
 	@Kroll.method
-	public TiBlob imageAsResized(TiBlob blob, HashMap args)
-	{
+	public TiBlob imageAsResized(TiBlob blob, HashMap args) {
 		return imageTransform(TRANSFORM_RESIZE, blob, new KrollDict(args));
 	}
-	
+
 	@Kroll.method
-	public TiBlob imageAsCropped(TiBlob blob, HashMap args)
-	{
+	public TiBlob imageAsCropped(TiBlob blob, HashMap args) {
 		return imageTransform(TRANSFORM_CROP, blob, new KrollDict(args));
 	}
 
 	@Kroll.method
-	public TiBlob imageTransform(Object[] args)
-	{
-	    Bitmap image = null;
-	    if (args[0] instanceof TiBlob) {
+	public TiBlob imageTransform(Object[] args) {
+		Bitmap image = null;
+		if (args[0] instanceof TiBlob) {
 
-            // Use the drawable reference to get the source bitmap
-            TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), (TiBlob)args[0]);
-            image = ref.getBitmap();
+			// Use the drawable reference to get the source bitmap
+			TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), (TiBlob) args[0]);
+			image = ref.getBitmap();
 
-            // Apply the transforms one at a time
-            for (int i = 1; i < args.length; i++) {
-                if (args[i] instanceof HashMap) {
-                     KrollDict transform = new KrollDict((HashMap)args[i]);
-                    int type = transform.optInt("type", TRANSFORM_NONE);
-                    Bitmap newImage = imageTransform(type, image, transform);
-                    image.recycle();
-                    image = null;
-                    image = newImage;
-                    newImage = null;
-                }
-            }
-            
-            ref = null;
-        }
+			// Apply the transforms one at a time
+			for (int i = 1; i < args.length; i++) {
+				if (args[i] instanceof HashMap) {
+					KrollDict transform = new KrollDict((HashMap) args[i]);
+					int type = transform.optInt("type", TRANSFORM_NONE);
+					Bitmap newImage = imageTransform(type, image, transform);
+					image.recycle();
+					image = null;
+					image = newImage;
+					newImage = null;
+				}
+			}
 
-	    if (image == null)
+			ref = null;
+		}
+
+		if (image == null)
 			return null;
-		
+
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		byte data[] = new byte[0];
-		// NOTE: While "70" is indeed ignored by the "compress" method, it is there so that in the future if we let the
-		// user decide the final output format and compression, we can remember what the default value is. For now, let
-		// us keep things simple and compress to a png so that we get transparency. Because it is loseless, users can
-		// then turn around and make a call to "compress" if they want it to be a smaller JPEG.
+		// NOTE: While "70" is indeed ignored by the "compress" method, it is there so
+		// that in the future if we let the
+		// user decide the final output format and compression, we can remember what the
+		// default value is. For now, let
+		// us keep things simple and compress to a png so that we get transparency.
+		// Because it is loseless, users can
+		// then turn around and make a call to "compress" if they want it to be a
+		// smaller JPEG.
 		if (image.compress(CompressFormat.PNG, 70, bos)) {
 			data = bos.toByteArray();
 		}
@@ -297,23 +298,22 @@ public class ImageFactoryModule extends KrollModule
 		// [MOD-309] Free up memory to work around issue in Android
 		image.recycle();
 		image = null;
-		
+
 		return result;
 	}
 
 	@Kroll.method
-	public TiBlob compress(TiBlob blob, float compressionQuality)
-	{
+	public TiBlob compress(TiBlob blob, float compressionQuality) {
 		TiBlob result = null;
 		Bitmap image = null;
 		ByteArrayOutputStream bos;
 		TiDrawableReference ref;
-		
+
 		try {
 			ref = TiDrawableReference.fromBlob(getActivity(), blob);
 			image = ref.getBitmap();
 			bos = new ByteArrayOutputStream();
-			if (image.compress(CompressFormat.JPEG, (int)(compressionQuality * 100), bos)) {
+			if (image.compress(CompressFormat.JPEG, (int) (compressionQuality * 100), bos)) {
 				byte[] data = bos.toByteArray();
 				BitmapFactory.Options bfOptions = new BitmapFactory.Options();
 				bfOptions.inPurgeable = true;
@@ -322,10 +322,10 @@ public class ImageFactoryModule extends KrollModule
 				coerceDimensionsIntoBlob(image, result);
 			}
 		} catch (OutOfMemoryError e) {
-			Log.e(LCAT, "Received an OutOfMemoryError! The image is too big to compress all at once. Consider using the \"compressToFile\" method instead.");
-		} 
-		finally {
-            // [MOD-309] Free up memory to work around issue in Android
+			Log.e(LCAT,
+					"Received an OutOfMemoryError! The image is too big to compress all at once. Consider using the \"compressToFile\" method instead.");
+		} finally {
+			// [MOD-309] Free up memory to work around issue in Android
 			if (image != null) {
 				image.recycle();
 				image = null;
@@ -333,7 +333,7 @@ public class ImageFactoryModule extends KrollModule
 			bos = null;
 			ref = null;
 		}
-		
+
 		return result;
 	}
 
@@ -354,7 +354,7 @@ public class ImageFactoryModule extends KrollModule
 		} catch (FileNotFoundException e) {
 			return false;
 		} finally {
-	        // [MOD-309] Free up memory to work around issue in Android
+			// [MOD-309] Free up memory to work around issue in Android
 			if (image != null) {
 				image.recycle();
 				image = null;
