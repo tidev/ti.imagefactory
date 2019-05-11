@@ -29,7 +29,6 @@ import org.appcelerator.titanium.view.TiDrawableReference;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.media.ExifInterface;
-import android.os.Build;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 
