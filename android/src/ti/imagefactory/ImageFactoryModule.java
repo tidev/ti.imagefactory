@@ -16,20 +16,18 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.titanium.TiApplication;
-
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.io.TiBaseFile;
 import org.appcelerator.titanium.io.TiFileFactory;
 import org.appcelerator.titanium.view.TiDrawableReference;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.support.media.ExifInterface;
-import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 
 @Kroll.module(name = "ImageFactory", id = "ti.imagefactory")
@@ -183,23 +181,36 @@ public class ImageFactoryModule extends KrollModule {
 			KrollDict dict = new KrollDict();
 
 			switch (orientation) {
+			case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+				dict.put("flipHorizontal", true);
+				break;
+			case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+				dict.put("degrees", 180);
+				dict.put("flipHorizontal", true);
+				break;
+			case ExifInterface.ORIENTATION_TRANSPOSE:
+				dict.put("degrees", 270);
+				dict.put("flipHorizontal", true);
+				break;
+			case ExifInterface.ORIENTATION_TRANSVERSE:
+				dict.put("degrees", 90);
+				dict.put("flipHorizontal", true);
+				break;
 			case ExifInterface.ORIENTATION_ROTATE_90:
-				dict.put("degrees", "90");
+				dict.put("degrees", 90);
 				break;
 			case ExifInterface.ORIENTATION_ROTATE_180:
-				dict.put("degrees", "180");
+				dict.put("degrees", 180);
 				break;
 			case ExifInterface.ORIENTATION_ROTATE_270:
-				dict.put("degrees", "270");
+				dict.put("degrees", 270);
 				break;
-			default:
-				dict.put("degrees", "0");
 			}
 
 			blob = imageTransform(TRANSFORM_ROTATE, blob, dict);
 
 		} catch (IOException e) {
-			Log.e(LCAT, "IO Exception occured, file probably does not exist.");
+			e.printStackTrace();
 
 		} finally {
 			if (inputStream != null) {
