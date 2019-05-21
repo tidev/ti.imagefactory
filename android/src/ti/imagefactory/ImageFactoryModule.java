@@ -110,6 +110,7 @@ public class ImageFactoryModule extends KrollModule
 	private int getQuality(KrollDict args) {
 		if (!args.containsKey("quality"))
 			return 70;
+			
 		return (int)(Float.parseFloat(args.getString("quality")) * 100);
 	}
 	
@@ -134,25 +135,53 @@ public class ImageFactoryModule extends KrollModule
 		if (image == null)
 			return null;
 		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte data[] = new byte[0];
-		CompressFormat format = getFormat(args);
-		if (image.compress(format, getQuality(args), bos)) {
-			data = bos.toByteArray();
-		}
-
-		TiBlob result = TiBlob.blobFromData(data, getStringFormat(format));
-		coerceDimensionsIntoBlob(image, result);
-
-		// [MOD-309] Free up memory to work around issue in Android
-		image.recycle();
-		image = null;
+		TiBlob result = convertImageToBlob(image);
 		ref = null;
 		
 		return result;
 	}
 
+	private TiBlob convertImageToBlob(Bitmap image) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		byte data[] = new byte[0];
+		// NOTE: While "70" is indeed ignored by the "compress" method, it is there so that in the future if we let the
+		// user decide the final output format and compression, we can remember what the default value is. For now, let
+		// us keep things simple and compress to a png so that we get transparency. Because it is loseless, users can
+		// then turn around and make a call to "compress" if they want it to be a smaller JPEG.
+		if (image.compress(CompressFormat.PNG, 70, bos)) {
+			data = bos.toByteArray();
+		}
+
+		TiBlob result = TiBlob.blobFromData(data, "image/png");
+		coerceDimensionsIntoBlob(image, result);
+
+		// [MOD-309] Free up memory to work around issue in Android
+		image.recycle();
+		image = null;
+		
+		return result;
+	}
+
  	// Public Image Methods
+	
+	@Kroll.method
+	public TiBlob resampleImage(String fileName, HashMap args)
+	{  
+		final KrollDict argsDict = new KrollDict(args);
+		final int inSampleSize = argsDict.optInt("inSampleSize", 1);
+		final int inDensity = argsDict.optInt("inDensity", 1);
+		final int inTargetDensity = argsDict.optInt("inTargetDensity", 1);
+
+		final BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();    
+		bitmapOptions.inSampleSize = inSampleSize;
+		bitmapOptions.inDensity = inDensity;
+		bitmapOptions.inTargetDensity = inTargetDensity;
+
+		final Bitmap scaledBitmap = BitmapFactory.decodeFile(fileName, bitmapOptions);
+		scaledBitmap.setDensity(Bitmap.DENSITY_NONE);
+
+		return convertImageToBlob(scaledBitmap);
+	}
 
 	@Kroll.method
 	public TiBlob imageWithRotation(TiBlob blob, HashMap args)
@@ -224,25 +253,8 @@ public class ImageFactoryModule extends KrollModule
 
 	    if (image == null)
 			return null;
-		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte data[] = new byte[0];
-		// NOTE: While "70" is indeed ignored by the "compress" method, it is there so that in the future if we let the
-		// user decide the final output format and compression, we can remember what the default value is. For now, let
-		// us keep things simple and compress to a png so that we get transparency. Because it is loseless, users can
-		// then turn around and make a call to "compress" if they want it to be a smaller JPEG.
-		if (image.compress(CompressFormat.PNG, 70, bos)) {
-			data = bos.toByteArray();
-		}
 
-		TiBlob result = TiBlob.blobFromData(data, "image/png");
-		coerceDimensionsIntoBlob(image, result);
-
-		// [MOD-309] Free up memory to work around issue in Android
-		image.recycle();
-		image = null;
-		
-		return result;
+		return convertImageToBlob(image);
 	}
 
 	@Kroll.method
