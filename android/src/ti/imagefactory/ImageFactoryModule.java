@@ -126,7 +126,7 @@ public class ImageFactoryModule extends KrollModule
 	private TiBlob imageTransform(int type, TiBlob blob, KrollDict args)
 	{
 		TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), blob);
-		Bitmap image = imageTransform(type, ref.getBitmap(), args);
+		Bitmap image = imageTransform(type, ref.getBitmap(false, false), args);
 
 		if (image == null)
 			return null;
@@ -195,7 +195,7 @@ public class ImageFactoryModule extends KrollModule
 
             // Use the drawable reference to get the source bitmap
             TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), (TiBlob)args[0]);
-            image = ref.getBitmap();
+            image = ref.getBitmap(false, false);
 
             // Apply the transforms one at a time
             for (int i = 1; i < args.length; i++) {
@@ -246,7 +246,7 @@ public class ImageFactoryModule extends KrollModule
 		
 		try {
 			ref = TiDrawableReference.fromBlob(getActivity(), blob);
-			image = ref.getBitmap();
+			image = ref.getBitmap(false, false);
 			bos = new ByteArrayOutputStream();
 			if (image.compress(CompressFormat.JPEG, (int)(compressionQuality * 100), bos)) {
 				byte[] data = bos.toByteArray();
@@ -276,7 +276,7 @@ public class ImageFactoryModule extends KrollModule
 	@Kroll.method
 	public boolean compressToFile(TiBlob blob, float compressionQuality, String fileURL) {
 		TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), blob);
-		Bitmap image = ref.getBitmap();
+		Bitmap image = ref.getBitmap(false, false);
 
 		TiBaseFile tiFile = TiFileFactory.createTitaniumFile(fileURL, false);
 		File file = tiFile.getNativeFile();
