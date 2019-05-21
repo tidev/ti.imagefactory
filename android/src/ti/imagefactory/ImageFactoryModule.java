@@ -261,6 +261,7 @@ public class ImageFactoryModule extends KrollModule
 				byte[] data = bos.toByteArray();
 				BitmapFactory.Options bfOptions = new BitmapFactory.Options();
 				bfOptions.inPurgeable = true;
+				bfOptions.inScaled = false;
 				bfOptions.inInputShareable = true;
 				result = TiBlob.blobFromData(data, "image/jpeg");
 				coerceDimensionsIntoBlob(image, result);
