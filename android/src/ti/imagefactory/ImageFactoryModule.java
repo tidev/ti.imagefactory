@@ -27,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
+import android.os.Build;
 
 @Kroll.module(name="ImageFactory", id="ti.imagefactory")
 public class ImageFactoryModule extends KrollModule
@@ -117,10 +118,10 @@ public class ImageFactoryModule extends KrollModule
 		try {
 			Field field = TiBlob.class.getDeclaredField("width");
 			field.setAccessible(true);
-		    field.setInt(blob, image.getWidth());
+			field.setInt(blob, image.getWidth());
 			field = TiBlob.class.getDeclaredField("height");
 			field.setAccessible(true);
-		    field.setInt(blob, image.getHeight());
+			field.setInt(blob, image.getHeight());
 		} catch (Exception e) {
 			// ** cry **
 		}
@@ -199,31 +200,31 @@ public class ImageFactoryModule extends KrollModule
 	@Kroll.method
 	public TiBlob imageTransform(Object[] args)
 	{
-	    Bitmap image = null;
-	    if (args[0] instanceof TiBlob) {
+		Bitmap image = null;
+		if (args[0] instanceof TiBlob) {
 
-            // Use the drawable reference to get the source bitmap
-            TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), (TiBlob)args[0]);
-            image = ref.getBitmap();
+			// Use the drawable reference to get the source bitmap
+			TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), (TiBlob)args[0]);
+			image = ref.getBitmap();
 
-            // Apply the transforms one at a time
-            for (int i = 1; i < args.length; i++) {
-                if (args[i] instanceof HashMap) {
-                     KrollDict transform = new KrollDict((HashMap)args[i]);
-                    int type = transform.optInt("type", TRANSFORM_NONE);
-                    Bitmap newImage = imageTransform(type, image, transform);
-                    image.recycle();
-                    image = null;
-                    image = newImage;
-                    newImage = null;
-                }
-            }
-            
-            ref = null;
-        }
+			// Apply the transforms one at a time
+			for (int i = 1; i < args.length; i++) {
+				if (args[i] instanceof HashMap) {
+					KrollDict transform = new KrollDict((HashMap)args[i]);
+					int type = transform.optInt("type", TRANSFORM_NONE);
+					Bitmap newImage = imageTransform(type, image, transform);
+					image.recycle();
+					image = null;
+					image = newImage;
+					newImage = null;
+				}
+			}
+			ref = null;
+		}
 
-	    if (image == null)
+		if (image == null) {
 			return null;
+		}
 		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		byte data[] = new byte[0];
@@ -260,8 +261,10 @@ public class ImageFactoryModule extends KrollModule
 			if (image.compress(CompressFormat.JPEG, (int)(compressionQuality * 100), bos)) {
 				byte[] data = bos.toByteArray();
 				BitmapFactory.Options bfOptions = new BitmapFactory.Options();
-				bfOptions.inPurgeable = true;
-				bfOptions.inInputShareable = true;
+				if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+					bfOptions.inPurgeable = true;
+					bfOptions.inInputShareable = true;
+				}
 				result = TiBlob.blobFromData(data, "image/jpeg");
 				coerceDimensionsIntoBlob(image, result);
 			}
@@ -269,7 +272,7 @@ public class ImageFactoryModule extends KrollModule
 			Log.e(LCAT, "Received an OutOfMemoryError! The image is too big to compress all at once. Consider using the \"compressToFile\" method instead.");
 		} 
 		finally {
-            // [MOD-309] Free up memory to work around issue in Android
+			// [MOD-309] Free up memory to work around issue in Android
 			if (image != null) {
 				image.recycle();
 				image = null;
@@ -298,7 +301,7 @@ public class ImageFactoryModule extends KrollModule
 		} catch (FileNotFoundException e) {
 			return false;
 		} finally {
-	        // [MOD-309] Free up memory to work around issue in Android
+			// [MOD-309] Free up memory to work around issue in Android
 			if (image != null) {
 				image.recycle();
 				image = null;
