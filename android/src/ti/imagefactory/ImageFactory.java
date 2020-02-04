@@ -70,7 +70,7 @@ public class ImageFactory {
 			if (cornerRadius > 0) {
 				final Rect rect = new Rect(borderSize, borderSize, size + borderSize, size + borderSize);
 				final RectF rectF = new RectF(rect);
-			Path path = new Path();
+				Path path = new Path();
 				path.addRoundRect(rectF, (float)cornerRadius, (float)cornerRadius, Path.Direction.CCW);
 				canvas.clipPath(path);
 			}
@@ -88,7 +88,7 @@ public class ImageFactory {
 			tempBitmap.recycle();
 			tempBitmap = null;
 
-		    return resultBitmap;			
+			return resultBitmap;			
 		}
 		
 		return null;
@@ -107,8 +107,8 @@ public class ImageFactory {
 			// Create a clipping path with rounded corners
 			if (cornerRadius > 0) {
 				Path path = new Path();
-		        final Rect rect = new Rect(borderSize, borderSize, image.getWidth() - borderSize, image.getHeight() - borderSize);
-		        final RectF rectF = new RectF(rect);
+				final Rect rect = new Rect(borderSize, borderSize, image.getWidth() - borderSize, image.getHeight() - borderSize);
+				final RectF rectF = new RectF(rect);
 				path.addRoundRect(rectF, (float)cornerRadius, (float)cornerRadius, Path.Direction.CCW);
 				canvas.clipPath(path);
 			}
@@ -116,7 +116,7 @@ public class ImageFactory {
 			// Draw the image to the canvas (clipped to the path)
 			canvas.drawBitmap(image, 0, 0, null);
 
-		    return resultBitmap;
+			return resultBitmap;
 		}
 		
 		return null;

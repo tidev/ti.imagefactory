@@ -82,7 +82,12 @@ public class ImageFactoryModule extends KrollModule
 	}
 	
 	private CompressFormat getFormat(KrollDict args) {
-		int format = args.optInt("format", JPEG);
+		int format = JPEG;
+
+		if (args != null) {
+			format = args.optInt("format", JPEG);
+		}
+
 		switch (format) {
 			case ImageFactoryModule.PNG:
 				return CompressFormat.PNG;
@@ -105,9 +110,9 @@ public class ImageFactoryModule extends KrollModule
 	}
 	
 	private int getQuality(KrollDict args) {
-		if (!args.containsKey("quality"))
+		if (args == null || !args.containsKey("quality")) {
 			return 70;
-			
+		}
 		return (int)(Float.parseFloat(args.getString("quality")) * 100);
 	}
 	
@@ -115,10 +120,10 @@ public class ImageFactoryModule extends KrollModule
 		try {
 			Field field = TiBlob.class.getDeclaredField("width");
 			field.setAccessible(true);
-		    field.setInt(blob, image.getWidth());
+			field.setInt(blob, image.getWidth());
 			field = TiBlob.class.getDeclaredField("height");
 			field.setAccessible(true);
-		    field.setInt(blob, image.getHeight());
+			field.setInt(blob, image.getHeight());
 		} catch (Exception e) {
 			// ** cry **
 		}
@@ -129,27 +134,29 @@ public class ImageFactoryModule extends KrollModule
 		TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), blob);
 		Bitmap image = imageTransform(type, ref.getBitmap(false, false), args);
 
-		if (image == null)
+		if (image == null) {
 			return null;
+		}
 		
-		TiBlob result = convertImageToBlob(image);
+		TiBlob result = convertImageToBlob(image, args);
 		ref = null;
 		
 		return result;
 	}
 
-	private TiBlob convertImageToBlob(Bitmap image) {
+	private TiBlob convertImageToBlob(Bitmap image, KrollDict args)
+	{
+		final CompressFormat format = getFormat(args);
+		final int quality = getQuality(args);
+
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		byte data[] = new byte[0];
-		// NOTE: While "70" is indeed ignored by the "compress" method, it is there so that in the future if we let the
-		// user decide the final output format and compression, we can remember what the default value is. For now, let
-		// us keep things simple and compress to a png so that we get transparency. Because it is loseless, users can
-		// then turn around and make a call to "compress" if they want it to be a smaller JPEG.
-		if (image.compress(CompressFormat.PNG, 70, bos)) {
+
+		if (image.compress(format, quality, bos)) {
 			data = bos.toByteArray();
 		}
 
-		TiBlob result = TiBlob.blobFromData(data, "image/png");
+		TiBlob result = TiBlob.blobFromData(data, getStringFormat(format));
 		coerceDimensionsIntoBlob(image, result);
 
 		// [MOD-309] Free up memory to work around issue in Android
@@ -160,25 +167,6 @@ public class ImageFactoryModule extends KrollModule
 	}
 
  	// Public Image Methods
-	
-	@Kroll.method
-	public TiBlob resampleImage(String fileName, HashMap args)
-	{  
-		final KrollDict argsDict = new KrollDict(args);
-		final int inSampleSize = argsDict.optInt("inSampleSize", 1);
-		final int inDensity = argsDict.optInt("inDensity", 1);
-		final int inTargetDensity = argsDict.optInt("inTargetDensity", 1);
-
-		final BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();    
-		bitmapOptions.inSampleSize = inSampleSize;
-		bitmapOptions.inDensity = inDensity;
-		bitmapOptions.inTargetDensity = inTargetDensity;
-
-		final Bitmap scaledBitmap = BitmapFactory.decodeFile(fileName, bitmapOptions);
-		scaledBitmap.setDensity(Bitmap.DENSITY_NONE);
-
-		return convertImageToBlob(scaledBitmap);
-	}
 
 	@Kroll.method
 	public TiBlob imageWithAlpha(TiBlob blob, HashMap args)
@@ -219,33 +207,33 @@ public class ImageFactoryModule extends KrollModule
 	@Kroll.method
 	public TiBlob imageTransform(Object[] args)
 	{
-	    Bitmap image = null;
-	    if (args[0] instanceof TiBlob) {
+		Bitmap image = null;
+		if (args[0] instanceof TiBlob) {
 
-            // Use the drawable reference to get the source bitmap
-            TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), (TiBlob)args[0]);
-            image = ref.getBitmap(false, false);
+			// Use the drawable reference to get the source bitmap
+			TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), (TiBlob)args[0]);
+			image = ref.getBitmap(false, false);
 
-            // Apply the transforms one at a time
-            for (int i = 1; i < args.length; i++) {
-                if (args[i] instanceof HashMap) {
-                     KrollDict transform = new KrollDict((HashMap)args[i]);
-                    int type = transform.optInt("type", TRANSFORM_NONE);
-                    Bitmap newImage = imageTransform(type, image, transform);
-                    image.recycle();
-                    image = null;
-                    image = newImage;
-                    newImage = null;
-                }
-            }
-            
-            ref = null;
-        }
-
-	    if (image == null)
+			// Apply the transforms one at a time
+			for (int i = 1; i < args.length; i++) {
+				if (args[i] instanceof HashMap) {
+					KrollDict transform = new KrollDict((HashMap)args[i]);
+					int type = transform.optInt("type", TRANSFORM_NONE);
+					Bitmap newImage = imageTransform(type, image, transform);
+					image.recycle();
+					image = null;
+					image = newImage;
+					newImage = null;
+				}
+			}
+			
+			ref = null;
+		}
+		if (image == null) {
 			return null;
+		}
 
-		return convertImageToBlob(image);
+		return convertImageToBlob(image, null);
 	}
 
 	@Kroll.method
@@ -263,9 +251,7 @@ public class ImageFactoryModule extends KrollModule
 			if (image.compress(CompressFormat.JPEG, (int)(compressionQuality * 100), bos)) {
 				byte[] data = bos.toByteArray();
 				BitmapFactory.Options bfOptions = new BitmapFactory.Options();
-				bfOptions.inPurgeable = true;
 				bfOptions.inScaled = false;
-				bfOptions.inInputShareable = true;
 				result = TiBlob.blobFromData(data, "image/jpeg");
 				coerceDimensionsIntoBlob(image, result);
 			}
@@ -273,7 +259,7 @@ public class ImageFactoryModule extends KrollModule
 			Log.e(LCAT, "Received an OutOfMemoryError! The image is too big to compress all at once. Consider using the \"compressToFile\" method instead.");
 		} 
 		finally {
-            // [MOD-309] Free up memory to work around issue in Android
+			// [MOD-309] Free up memory to work around issue in Android
 			if (image != null) {
 				image.recycle();
 				image = null;
@@ -302,7 +288,7 @@ public class ImageFactoryModule extends KrollModule
 		} catch (FileNotFoundException e) {
 			return false;
 		} finally {
-	        // [MOD-309] Free up memory to work around issue in Android
+			// [MOD-309] Free up memory to work around issue in Android
 			if (image != null) {
 				image.recycle();
 				image = null;
