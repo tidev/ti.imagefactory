@@ -10,7 +10,7 @@
     "format:js": "npm run lint:js -- --fix",
     "lint": "npm run lint:android && npm run lint:ios && npm run lint:js && npm run lint:docs",
     "lint:android": "clang-format-lint android/src/**/*.java",
-    "lint:docs": "tdoc-validate -w Titanium.Proxy,Titanium.Module apidoc",
+    "lint:docs": "tdoc-validate -w Titanium.Module,Titanium.Blob apidoc",
     "lint:ios": "clang-format-lint ios/**/*.m ios/**/*.h",
     "lint:js": "eslint .",
     "test": "npm run lint"
