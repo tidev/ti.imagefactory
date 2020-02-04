@@ -44,6 +44,7 @@ imageViewTransformed.image = blob;
 var type = 0;
 
 btnTransform.addEventListener('click', function (e) {
+	var newBlob;
 	switch (type) {
 		case 0:
 			newBlob = ImageFactory.imageWithAlpha(blob, { format: ImageFactory.PNG });
@@ -77,7 +78,7 @@ btnTransform.addEventListener('click', function (e) {
 });
 
 btnSave.addEventListener('click', function (e) {
-	newBlob = ImageFactory.compress(blob, 0.25);
+	var newBlob = ImageFactory.compress(blob, 0.25);
 	var filename = Titanium.Filesystem.applicationDataDirectory + '/newflower.jpg';
 	f = Titanium.Filesystem.getFile(filename);
 	f.write(newBlob);
