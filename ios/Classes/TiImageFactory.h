@@ -7,12 +7,12 @@
 @interface TiImageFactory : NSObject {
 }
 
-+(UIImage*)imageCrop:(UIImage*)image withArgs:(NSDictionary*)args;
-+(UIImage*)imageResize:(UIImage*)image withArgs:(NSDictionary*)args;
-+(UIImage*)imageThumbnail:(UIImage*)image withArgs:(NSDictionary*)args;
-+(UIImage*)imageRoundedCorner:(UIImage*)image withArgs:(NSDictionary*)args;
-+(UIImage*)imageTransparentBorder:(UIImage*)image withArgs:(NSDictionary*)args;
-+(UIImage*)imageAlpha:(UIImage*)image withArgs:(NSDictionary*)args;
-+(UIImage*)imageRotate:(UIImage*)image withArgs:(NSDictionary*)args;
++ (UIImage *)imageCrop:(UIImage *)image withArgs:(NSDictionary *)args;
++ (UIImage *)imageResize:(UIImage *)image withArgs:(NSDictionary *)args;
++ (UIImage *)imageThumbnail:(UIImage *)image withArgs:(NSDictionary *)args;
++ (UIImage *)imageRoundedCorner:(UIImage *)image withArgs:(NSDictionary *)args;
++ (UIImage *)imageTransparentBorder:(UIImage *)image withArgs:(NSDictionary *)args;
++ (UIImage *)imageAlpha:(UIImage *)image withArgs:(NSDictionary *)args;
++ (UIImage *)imageRotate:(UIImage *)image withArgs:(NSDictionary *)args;
 
 @end
