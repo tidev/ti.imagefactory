@@ -3,13 +3,13 @@
  */
 #import "TiImagefactoryModuleAssets.h"
 
-extern NSData * dataWithHexString (NSString * hexString);
+extern NSData *dataWithHexString(NSString *hexString);
 
 @implementation TiImagefactoryModuleAssets
 
-- (NSData*) moduleAsset
+- (NSData *)moduleAsset
 {
-	return nil;
+  return nil;
 }
 
 @end
