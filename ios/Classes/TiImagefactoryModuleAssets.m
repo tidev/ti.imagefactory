@@ -20,4 +20,3 @@ extern NSData *filterDataInRange(NSData *thedata, NSRange range);
 }
 
 @end
-
