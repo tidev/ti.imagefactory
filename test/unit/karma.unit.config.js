@@ -1,15 +1,30 @@
 'use strict';
 
+const path = require('path');
+const fs = require('fs-extra');
+
+function projectManagerHook(projectManager) {
+	projectManager.once('prepared', function () {
+		const src = path.join(__dirname, 'images', 'flower.jpg.keep');
+		const dest = path.join(this.karmaRunnerProjectPath, 'Resources', 'flower.jpg.keep');
+		fs.copySync(src, dest);
+	});
+}
+projectManagerHook.$inject = [ 'projectManager' ];
+
 module.exports = config => {
 	config.set({
 		basePath: '../..',
-		frameworks: [ 'jasmine' ],
+		frameworks: [ 'jasmine', 'projectManagerHook' ],
 		files: [
 			'test/unit/specs/**/*spec.js'
 		],
 		reporters: [ 'mocha', 'junit' ],
 		plugins: [
-			'karma-*'
+			'karma-*',
+			{
+				'framework:projectManagerHook': [ 'factory', projectManagerHook ]
+			}
 		],
 		titanium: {
 			sdkVersion: config.sdkVersion || '9.0.0.v20200205142057'
