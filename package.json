@@ -13,7 +13,9 @@
     "lint:docs": "tdoc-validate -w Titanium.Module,Titanium.Blob apidoc",
     "lint:ios": "clang-format-lint ios/**/*.m ios/**/*.h",
     "lint:js": "eslint .",
-    "test": "npm run lint"
+    "test": "karma start test/unit/karma.unit.config.js",
+    "test:android": "npm test -- --browsers android",
+    "test:ios": "npm test -- --browsers ios"
   },
   "repository": {
     "type": "git",
@@ -35,7 +37,14 @@
     "danger": "^9.2.10",
     "eslint": "^6.8.0",
     "eslint-config-axway": "^4.1.1",
+    "eslint-plugin-jasmine": "^4.1.1",
     "husky": "^4.2.1",
+    "jasmine-core": "^3.5.0",
+    "karma": "^5.0.2",
+    "karma-jasmine": "^3.1.1",
+    "karma-junit-reporter": "^2.0.1",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-titanium-launcher": "^0.7.8",
     "lint-staged": "^10.0.7",
     "titanium-docgen": "^4.1.0"
   },
@@ -64,5 +73,13 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "main": "dangerfile.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
