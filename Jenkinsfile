@@ -1,7 +1,7 @@
 #!groovy
 library 'pipeline-library'
 
-def isMaster = env.BRANCH_NAME.equals('master')
+def isMaster = env.BRANCH_NAME.equals('stable')
 
 buildModule {
 	// defaults:
