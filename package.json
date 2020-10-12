@@ -36,7 +36,7 @@
     "commitizen": "^4.2.1",
     "danger": "^10.4.0",
     "eslint": "^7.9.0",
-    "eslint-config-axway": "^4.7.3",
+    "eslint-config-axway": "^5.0.0",
     "eslint-plugin-jasmine": "^4.1.1",
     "husky": "^4.3.0",
     "jasmine-core": "^3.6.0",
