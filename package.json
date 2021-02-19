@@ -44,7 +44,7 @@
     "karma-jasmine": "^4.0.1",
     "karma-junit-reporter": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
-    "karma-titanium-launcher": "^0.7.8",
+    "karma-titanium-launcher": "^0.8.1",
     "lint-staged": "^10.4.0",
     "titanium-docgen": "^4.7.0"
   },
