@@ -1,0 +1,5 @@
+.DS_Store
+libs
+build
+build.properties
+dist/*

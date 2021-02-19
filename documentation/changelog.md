@@ -1,5 +1,9 @@
 # Change Log
 <pre>
+v3.1.0  Added image rotation functionality, fixed images not being recycled properly.
+
+v3.0.0  Rebuild module for SDK 6+ compatibility
+
 v2.2.2	[MOD-2166] Recompiled module to solve crashes in Android 6.0
 
 v2.2.1	[MOD-940] Building with 2.1.3.GA and open sourcing

@@ -2,18 +2,17 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 2.2.2
-apiversion: 2
-architectures: armeabi armeabi-v7a x86
+version: 5.0.0
+apiversion: 4
+architectures: arm64-v8a armeabi-v7a x86 x86_64
 description: Image Factory
 author: Jeff English
 license: Apache License, Version 2.0
-copyright: Copyright (c) 2013 by Appcelerator,  Inc.
-
+copyright: Copyright (c) 2013-2017 by Appcelerator,  Inc.
 
 # these should not be edited
 name: imagefactory
 moduleid: ti.imagefactory
 guid: 0aab25d7-0486-40ab-94a3-ed4f9a293414
 platform: android
-minsdk: 4.0.0.GA
+minsdk: 9.0.0

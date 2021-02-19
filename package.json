@@ -1,0 +1,85 @@
+{
+  "name": "@titanium-sdk/ti.imagefactory",
+  "version": "6.0.0",
+  "description": "Ti.ImageFactory provides a set of image transformation functions including the ability to scale, crop, and compress images. Additionally, this module offers the functionality of adding alpha channels and transparent borders.",
+  "scripts": {
+    "commit": "git-cz",
+    "format": "npm run format:android && npm run format:ios && npm run format:js",
+    "format:android": "npm run lint:android -- --fix",
+    "format:ios": "npm run lint:ios -- --fix",
+    "format:js": "npm run lint:js -- --fix",
+    "lint": "npm run lint:android && npm run lint:ios && npm run lint:js && npm run lint:docs",
+    "lint:android": "clang-format-lint android/src/**/*.java",
+    "lint:docs": "tdoc-validate -w Titanium.Module,Titanium.Blob apidoc",
+    "lint:ios": "clang-format-lint ios/**/*.m ios/**/*.h",
+    "lint:js": "eslint .",
+    "test": "karma start test/unit/karma.unit.config.js",
+    "test:android": "npm test -- --browsers android",
+    "test:ios": "npm test -- --browsers ios"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appcelerator-modules/ti.imagefactory.git"
+  },
+  "bugs": {
+    "url": "https://github.com/appcelerator-modules/ti.imagefactory/issues"
+  },
+  "homepage": "https://github.com/appcelerator-modules/ti.imagefactory#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@seadub/clang-format-lint": "0.0.2",
+    "@seadub/danger-plugin-dependencies": "^1.0.0",
+    "@seadub/danger-plugin-junit": "^0.2.0",
+    "@seadub/danger-plugin-titanium-module": "1.0.0",
+    "clang-format": "^1.2.3",
+    "commitizen": "^4.2.1",
+    "danger": "^10.4.0",
+    "eslint": "^7.9.0",
+    "eslint-config-axway": "^5.0.0",
+    "eslint-plugin-jasmine": "^4.1.1",
+    "husky": "^4.3.0",
+    "jasmine-core": "^3.6.0",
+    "karma": "^5.2.2",
+    "karma-jasmine": "^4.0.1",
+    "karma-junit-reporter": "^2.0.1",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-titanium-launcher": "^0.7.8",
+    "lint-staged": "^10.4.0",
+    "titanium-docgen": "^4.7.0"
+  },
+  "dependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "ios/**/*.{m,h}": [
+      "npx clang-format -style=file -i"
+    ],
+    "*.java": [
+      "npx clang-format -style=file -i"
+    ],
+    "*.js": "eslint"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "main": "dangerfile.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
