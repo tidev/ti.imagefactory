@@ -3,13 +3,20 @@
  */
 #import "TiImagefactoryModuleAssets.h"
 
-extern NSData * dataWithHexString (NSString * hexString);
+extern NSData *filterDataInRange(NSData *thedata, NSRange range);
 
 @implementation TiImagefactoryModuleAssets
 
-- (NSData*) moduleAsset
+- (NSData *)moduleAsset
 {
-	return nil;
+
+  return nil;
+}
+
+- (NSData *)resolveModuleAsset:(NSString *)path
+{
+
+  return nil;
 }
 
 @end

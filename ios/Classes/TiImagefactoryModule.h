@@ -6,8 +6,7 @@
 
 #import "TiModule.h"
 
-@interface TiImagefactoryModule : TiModule 
-{
+@interface TiImagefactoryModule : TiModule {
 }
 
 @end

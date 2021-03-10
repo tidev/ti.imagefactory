@@ -1,0 +1,19 @@
+{
+  "extends": [ "axway/env-titanium", "plugin:jasmine/recommended"],
+  "plugins": [ "jasmine" ],
+  "env": {
+    "node": true,
+    "jasmine": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2015,
+    "sourceType": "script"
+  },
+  "globals": {
+    "Ti": false,
+    "Titanium": false,
+    "__filename": false,
+    "__dirname": false,
+    "kroll": false
+  }
+}

@@ -1,0 +1,11 @@
+android/documentation/
+android/example/
+
+iphone/documentation/
+iphone/example/
+iphone/platform/
+
+test/
+apidoc/
+Jenkinsfile
+dangerfile.js

@@ -1,8 +1,10 @@
-@Library('pipeline-library') _
+#!groovy
+library 'pipeline-library'
+
+def isMaster = env.BRANCH_NAME.equals('stable')
 
 buildModule {
-	// defaults:
-	//nodeVersion = '4.7.3' // Must have version set up on Jenkins master before it can be changed
-	//sdkVersion = '6.0.3.GA'
-	//androidAPILevel = '23' // if changed, must install on build nodes
+	sdkVersion = '9.3.2.GA'
+	npmPublish = isMaster
+	iosLabels = 'osx && xcode-12'
 }
