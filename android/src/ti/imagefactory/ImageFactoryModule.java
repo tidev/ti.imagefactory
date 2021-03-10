@@ -173,17 +173,15 @@ public class ImageFactoryModule extends KrollModule
 
 		return result;
 	}
-    
-    // Public Image Methods
+
+	// Public Image Methods
 
 	@Kroll.method
 	public TiBlob fixOrientation(TiBlob blob)
-    {
-
+	{
 		InputStream inputStream = null;
 
 		try {
-
 			inputStream = blob.getInputStream();
 			ExifInterface Exif = new ExifInterface(inputStream);
 
@@ -222,12 +220,12 @@ public class ImageFactoryModule extends KrollModule
 
 		} catch (IOException e) {
 			e.printStackTrace();
-
 		} finally {
 			if (inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
+					e.printStackTrace();
 				}
 				inputStream = null;
 			}
@@ -238,7 +236,7 @@ public class ImageFactoryModule extends KrollModule
 
 	@Kroll.method
 	public TiBlob imageWithRotation(TiBlob blob, HashMap args)
-    {
+	{
 		return imageTransform(TRANSFORM_ROTATE, blob, new KrollDict(args));
 	}
 
@@ -309,14 +307,10 @@ public class ImageFactoryModule extends KrollModule
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		byte data[] = new byte[0];
-		// NOTE: While "70" is indeed ignored by the "compress" method, it is there so
-		// that in the future if we let the
-		// user decide the final output format and compression, we can remember what the
-		// default value is. For now, let
-		// us keep things simple and compress to a png so that we get transparency.
-		// Because it is loseless, users can
-		// then turn around and make a call to "compress" if they want it to be a
-		// smaller JPEG.
+		// NOTE: While "70" is indeed ignored by the "compress" method, it is there so that in the future if we let the
+		// user decide the final output format and compression, we can remember what the default value is. For now, let
+		// us keep things simple and compress to a png so that we get transparency. Because it is loseless, users can
+		// then turn around and make a call to "compress" if they want it to be a smaller JPEG.
 		if (image.compress(CompressFormat.PNG, 70, bos)) {
 			data = bos.toByteArray();
 		}
@@ -332,7 +326,8 @@ public class ImageFactoryModule extends KrollModule
 	}
 
 	@Kroll.method
-	public TiBlob compress(TiBlob blob, float compressionQuality) {
+	public TiBlob compress(TiBlob blob, float compressionQuality)
+	{
 		TiBlob result = null;
 		Bitmap image = null;
 		ByteArrayOutputStream bos;

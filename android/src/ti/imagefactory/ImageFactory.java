@@ -18,7 +18,8 @@ import org.appcelerator.kroll.KrollDict;
 public class ImageFactory
 {
 
-	public static Bitmap imageRotate(Bitmap image, KrollDict args) {
+	public static Bitmap imageRotate(Bitmap image, KrollDict args)
+	{
 		if (image != null) {
 
 			Matrix matrix = new Matrix();
