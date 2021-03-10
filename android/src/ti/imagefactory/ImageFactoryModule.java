@@ -11,8 +11,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
-import android.support.media.ExifInterface;
-
+import androidx.exifinterface.media.ExifInterface;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -177,7 +176,7 @@ public class ImageFactoryModule extends KrollModule
 	// Public Image Methods
 
 	@Kroll.method
-	public TiBlob fixOrientation(TiBlob blob)
+	public TiBlob imageAsUpright(TiBlob blob)
 	{
 		InputStream inputStream = null;
 
@@ -190,34 +189,35 @@ public class ImageFactoryModule extends KrollModule
 			KrollDict dict = new KrollDict();
 
 			switch (orientation) {
-			case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
-				dict.put("flipHorizontal", true);
-				break;
-			case ExifInterface.ORIENTATION_FLIP_VERTICAL:
-				dict.put("degrees", 180);
-				dict.put("flipHorizontal", true);
-				break;
-			case ExifInterface.ORIENTATION_TRANSPOSE:
-				dict.put("degrees", 270);
-				dict.put("flipHorizontal", true);
-				break;
-			case ExifInterface.ORIENTATION_TRANSVERSE:
-				dict.put("degrees", 90);
-				dict.put("flipHorizontal", true);
-				break;
-			case ExifInterface.ORIENTATION_ROTATE_90:
-				dict.put("degrees", 90);
-				break;
-			case ExifInterface.ORIENTATION_ROTATE_180:
-				dict.put("degrees", 180);
-				break;
-			case ExifInterface.ORIENTATION_ROTATE_270:
-				dict.put("degrees", 270);
-				break;
+				case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+					dict.put("flipHorizontal", true);
+					break;
+				case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+					dict.put("degrees", 180);
+					dict.put("flipHorizontal", true);
+					break;
+				case ExifInterface.ORIENTATION_TRANSPOSE:
+					dict.put("degrees", 270);
+					dict.put("flipHorizontal", true);
+					break;
+				case ExifInterface.ORIENTATION_TRANSVERSE:
+					dict.put("degrees", 90);
+					dict.put("flipHorizontal", true);
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_90:
+					dict.put("degrees", 90);
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_180:
+					dict.put("degrees", 180);
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_270:
+					dict.put("degrees", 270);
+					break;
 			}
 
-			blob = imageTransform(TRANSFORM_ROTATE, blob, dict);
-
+			if (!dict.isEmpty()) {
+				blob = imageTransform(TRANSFORM_ROTATE, blob, dict);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

@@ -6,6 +6,7 @@
 
 #import "TiImagefactoryModule.h"
 #import "TiBase.h"
+#import "TiBlob.h"
 #import "TiHost.h"
 #import "TiImageFactory.h"
 #import "TiUtils.h"
@@ -108,6 +109,12 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
 }
 
 #pragma mark Public Image Methods
+
+- (id)imageAsUpright:(id)args
+{
+  ENSURE_SINGLE_ARG(args, TiBlob);
+  return args;
+}
 
 - (id)imageWithRotation:(id)args
 {

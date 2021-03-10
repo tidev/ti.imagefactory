@@ -167,6 +167,16 @@ methods:
     returns:
         type: Titanium.Blob
 
+  - name: imageAsUpright
+    summary: Creates a new image by creating a copy of the given image that is rotated to be upright.
+    platforms: [android, iphone, ipad]
+    parameters:
+      - name: blob
+        summary: Image to transform
+        type: Titanium.Blob
+    returns:
+        type: Titanium.Blob
+
   - name: imageAsThumbnail
     summary: Creates a new image by creating a copy of the given image that is squared to the thumbnail size.
     platforms: [android, iphone, ipad]
@@ -457,5 +467,4 @@ properties:
         (or best quality).
     platforms: [android]
     default: 0.7
-
       
