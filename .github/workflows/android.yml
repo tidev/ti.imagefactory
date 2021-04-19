@@ -1,0 +1,99 @@
+name: Android Build
+on: 
+  push:
+    paths-ignore:
+    - 'ios/**'
+    - 'apidoc/**'
+  pull_request:
+    paths-ignore:
+    - 'ios/**'
+    - 'apidoc/**'
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: macos-latest
+    name: Android
+    env:
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      USE_CCACHE: 1
+      SDK_VERSION: 9.3.2.GA
+      MODULE_ID: ti.imagefactory
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: Cache Node.js modules
+      id: node-cache
+      uses: actions/cache@v2
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-node-modules-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-modules-
+          ${{ runner.OS }}-
+
+    - run: npm ci
+      name: Install dependencies
+      if: steps.node-cache.outputs.cache-hit != 'true'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - run: npm run lint:android
+      name: Lint
+
+    - run: npm i -g titanium
+      name: Install Titanium CLI
+
+# TODO: Cache sdk install
+    - run: ti sdk install ${{ env.SDK_VERSION }} --force
+      name: Install Titanium SDK
+
+    - name: Install ccache
+      run: brew install ccache
+
+    - name: Retrieve ccache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ${{ runner.os }}-ccache-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-ccache-
+
+    - name: Build and Test
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        target: playstore
+        script: npm run test:android -- --sdkVersion ${{ env.SDK_VERSION }}
+
+    - name: Show summary of ccache configuration and statistics counters
+      run: ccache --show-stats
+
+# TODO: Grab the version so zip file name can contain it
+
+    - name: Archive Android zip
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.MODULE_ID }}-android
+        path: |
+          android/dist/${{ env.MODULE_ID }}-android-*.zip
+
+    - name: Cleanup Gradle Cache
+      # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+      # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+      run: |
+        rm -f ~/.gradle/caches/modules-2/modules-2.lock
+        rm -f ~/.gradle/caches/modules-2/gc.properties
