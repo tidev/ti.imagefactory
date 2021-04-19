@@ -78,6 +78,7 @@ jobs:
         api-level: 29
         target: playstore
         script: npm run test:android -- --sdkVersion ${{ env.SDK_VERSION }}
+        disable-animations: false # defaulting to true, the commands sent to emulator to do this sometimes run too quickly after boot and cause "adb: device offline" failures
 
     - name: Show summary of ccache configuration and statistics counters
       run: ccache --show-stats
