@@ -1,0 +1,42 @@
+name: JavaScript Lint
+on: 
+  push:
+    paths:
+    - '**.js'
+    - '**.json'
+    - '**.eslint*'
+  pull_request:
+    paths:
+    - '**.js'
+    - '**.json'
+    - '**.eslint*'
+  workflow_dispatch:
+  
+jobs:
+  js:
+    runs-on: ubuntu-latest
+    name: JavaScript
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: Cache Node.js modules
+      id: node-cache
+      uses: actions/cache@v2
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-node-modules-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-modules-
+          ${{ runner.OS }}-
+
+    - run: npm ci
+      name: Install dependencies
+      if: steps.node-cache.outputs.cache-hit != 'true'
+
+    - run: npm run lint:js
+      name: Lint

@@ -1,0 +1,64 @@
+name: iOS Build
+on: 
+  push:
+    paths-ignore:
+    - 'android/**'
+    - 'apidoc/**'
+  pull_request:
+    paths-ignore:
+    - 'android/**'
+    - 'apidoc/**'
+  workflow_dispatch:
+  
+jobs:
+  ios:
+    runs-on: macos-latest
+    name: iOS
+    env:
+      SDK_VERSION: 9.3.2.GA
+      MODULE_ID: ti.imagefactory
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: Cache Node.js modules
+      id: node-cache
+      uses: actions/cache@v2
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-node-modules-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-modules-
+          ${{ runner.OS }}-
+
+    - run: npm ci
+      name: Install dependencies
+      if: steps.node-cache.outputs.cache-hit != 'true'
+
+    - run: npm run lint:ios
+      name: Lint
+
+    - run: npm i -g titanium
+      name: Install Titanium CLI
+
+# TODO cache SDK install
+
+    - run: ti sdk install ${{ env.SDK_VERSION }} --force
+      name: Install Titanium SDK
+
+    - run: sed -i .bak 's/TITANIUM_SDK_VERSION = .*/TITANIUM_SDK_VERSION = ${{ env.SDK_VERSION }}/' ios/titanium.xcconfig
+      name: Set to Build with newly installed SDK
+
+    - run: npm run test:ios -- --sdkVersion ${{ env.SDK_VERSION }}
+      name: Build and Test
+
+    - name: Archive iOS artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.MODULE_ID }}-ios
+        path: |
+          ios/dist/${{ env.MODULE_ID }}-iphone-*.zip
