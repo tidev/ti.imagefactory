@@ -27,7 +27,7 @@
   "homepage": "https://github.com/appcelerator-modules/ti.imagefactory#readme",
   "devDependencies": {
     "@commitlint/cli": "^12.0.0",
-    "@commitlint/config-conventional": "^12.0.0",
+    "@commitlint/config-conventional": "^13.1.0",
     "@seadub/clang-format-lint": "0.0.2",
     "@seadub/danger-plugin-dependencies": "^1.0.0",
     "@seadub/danger-plugin-junit": "^0.2.0",
