@@ -2,11 +2,12 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 2.0.0
+version: 3.0.0
 apiversion: 2
-architectures: armv7 i386 x86_64 arm64
+architectures: i386 arm64
 description: Image Factory
 author: Jeff English
+mac: true
 license: Apache License, Version 2.0
 copyright: Copyright (c) 2013-2017 by Appcelerator,  Inc.
 
