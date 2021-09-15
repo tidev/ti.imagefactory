@@ -1,6 +1,6 @@
 {
   "name": "@titanium-sdk/ti.imagefactory",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Ti.ImageFactory provides a set of image transformation functions including the ability to scale, crop, and compress images. Additionally, this module offers the functionality of adding alpha channels and transparent borders.",
   "scripts": {
     "commit": "git-cz",
