@@ -6,6 +6,7 @@
 
 #import "TiImagefactoryModule.h"
 #import "TiBase.h"
+#import "TiBlob.h"
 #import "TiHost.h"
 #import "TiImageFactory.h"
 #import "TiUtils.h"
@@ -144,6 +145,18 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
   return [TiImagefactoryModule imageTransform:kTransformCrop withArgs:args];
 }
 
+- (id)imageAsUpright:(id)args
+{
+  ENSURE_SINGLE_ARG(args, TiBlob);
+  TiBlob *blob = (TiBlob *)args;
+  UIImage *sourceImage = [blob image];
+  UIImage *newImage = [TiImageFactory imageUpright:sourceImage];
+  if (newImage && (newImage != sourceImage)) {
+     blob = [[[TiBlob alloc] initWithImage:newImage] autorelease];
+  }
+  return blob;
+}
+
 - (id)imageTransform:(id)args
 {
   enum Args {
@@ -177,12 +190,13 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
     kArgCount
   };
 
-  // Validate correct number of argumetns
+  // Validate correct number of arguments
   ENSURE_ARG_COUNT(args, kArgCount);
 
   id blob = [args objectAtIndex:kArgBlob];
   ENSURE_TYPE(blob, TiBlob);
   UIImage *image = [(TiBlob *)blob image];
+  image = [TiImageFactory imageUpright:image];
 
   float compressionQuality = [TiUtils floatValue:[args objectAtIndex:kArgCompressionQuality] def:1.0];
   return [[[TiBlob alloc] initWithData:UIImageJPEGRepresentation(image, compressionQuality) mimetype:@"image/jpeg"] autorelease];
