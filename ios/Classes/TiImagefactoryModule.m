@@ -184,22 +184,16 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
 
 - (id)compress:(id)args
 {
-  enum Args {
-    kArgBlob = 0,
-    kArgCompressionQuality,
-    kArgCount
-  };
+  TiBlob *blob;
+  NSNumber *qualityObject;
+  ENSURE_ARG_AT_INDEX(blob, args, 0, TiBlob);
+  ENSURE_ARG_AT_INDEX(qualityObject, args, 1, NSNumber);
 
-  // Validate correct number of arguments
-  ENSURE_ARG_COUNT(args, kArgCount);
-
-  id blob = [args objectAtIndex:kArgBlob];
-  ENSURE_TYPE(blob, TiBlob);
-  UIImage *image = [(TiBlob *)blob image];
+  UIImage *image = [blob image];
   image = [TiImageFactory imageUpright:image];
 
-  float compressionQuality = [TiUtils floatValue:[args objectAtIndex:kArgCompressionQuality] def:1.0];
-  return [[[TiBlob alloc] initWithData:UIImageJPEGRepresentation(image, compressionQuality) mimetype:@"image/jpeg"] autorelease];
+  float qualityValue = [TiUtils floatValue:qualityObject def:1.0];
+  return [[[TiBlob alloc] initWithData:UIImageJPEGRepresentation(image, qualityValue) mimetype:@"image/jpeg"] autorelease];
 }
 
 @end

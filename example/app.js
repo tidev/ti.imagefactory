@@ -70,6 +70,20 @@ tableView.addEventListener('click', (e) => {
 		tableView.appendRow(row);
 	}
 	if (OS_ANDROID) {
+		const row = Ti.UI.createTableViewRow({ title: 'compress() WebP 5% quality' });
+		row.addEventListener('click', () => {
+			showImageWindowFor(ImageFactory.compress(sourceBlob, 0.05, ImageFactory.WEBP));
+		});
+		tableView.appendRow(row);
+	}
+	if (OS_ANDROID) {
+		const row = Ti.UI.createTableViewRow({ title: 'compress() WebP 100% quality' });
+		row.addEventListener('click', () => {
+			showImageWindowFor(ImageFactory.compress(sourceBlob, 1.0, ImageFactory.WEBP));
+		});
+		tableView.appendRow(row);
+	}
+	if (OS_ANDROID) {
 		const row = Ti.UI.createTableViewRow({ title: 'compressToFile() JPEG 5% quality' });
 		row.addEventListener('click', () => {
 			const file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'CompressTest.jpg');
@@ -82,6 +96,24 @@ tableView.addEventListener('click', (e) => {
 		const row = Ti.UI.createTableViewRow({ title: 'compressToFile() JPEG 100% quality' });
 		row.addEventListener('click', () => {
 			const file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'CompressTest.jpg');
+			ImageFactory.compressToFile(sourceBlob, 1.0, file.nativePath);
+			showImageWindowFor(file.read());
+		});
+		tableView.appendRow(row);
+	}
+	if (OS_ANDROID) {
+		const row = Ti.UI.createTableViewRow({ title: 'compressToFile() WebP 5% quality' });
+		row.addEventListener('click', () => {
+			const file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'CompressTest.webp');
+			ImageFactory.compressToFile(sourceBlob, 0.05, file.nativePath);
+			showImageWindowFor(file.read());
+		});
+		tableView.appendRow(row);
+	}
+	if (OS_ANDROID) {
+		const row = Ti.UI.createTableViewRow({ title: 'compressToFile() WebP 100% quality' });
+		row.addEventListener('click', () => {
+			const file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'CompressTest.webp');
 			ImageFactory.compressToFile(sourceBlob, 1.0, file.nativePath);
 			showImageWindowFor(file.read());
 		});

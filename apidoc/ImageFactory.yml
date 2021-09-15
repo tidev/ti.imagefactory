@@ -112,17 +112,32 @@ properties:
     value: 1
     platforms: [android]
 
+  - name: WEBP
+    summary: Possible value of the `format` property in the various image transform methods' options objects
+    type: Number
+    permission: read-only
+    value: 2
+    since: "5.1.0"
+    platforms: [android]
+
 methods:
   - name: compress
     summary: Compresses an image to JPEG and returns it as a new image blob.
     platforms: [android, iphone, ipad]
     parameters:
       - name: blob
-        summary: Image to compress to JPEG.
+        summary: The image to compress to a JPEG or whatever the optional "format" argument is set to.
         type: Titanium.Blob
       - name: quality
         summary: Compression quality ranging from 0.0 to 1.0.
         type: Number
+      - name: format
+        summary: The output format of the image.
+        type: Number
+        default: Modules.ImageFactory.JPEG
+        constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
+        optional: true
+        platforms: [android]
     returns:
         type: Titanium.Blob
 
@@ -267,15 +282,15 @@ summary: Shape of the Object passed to the [imageWithAlpha](Modules.ImageFactory
 properties:
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
     platforms: [android]
@@ -293,15 +308,15 @@ properties:
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
     platforms: [android]
@@ -325,15 +340,15 @@ properties:
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
     platforms: [android]
@@ -363,16 +378,16 @@ properties:
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
         On Android, this is a Float.
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
 
@@ -412,16 +427,16 @@ properties:
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
         On Android, this is a Float.
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
 
@@ -474,15 +489,15 @@ properties:
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
     platforms: [android]

@@ -62,6 +62,8 @@ public class ImageFactoryModule extends KrollModule
 	public static final int JPEG = ImageFormatType.JPEG.toTitaniumIntegerId();
 	@Kroll.constant
 	public static final int PNG = ImageFormatType.PNG.toTitaniumIntegerId();
+	@Kroll.constant
+	public static final int WEBP = ImageFormatType.WEBP.toTitaniumIntegerId();
 
 	@Kroll.method
 	public TiBlob imageWithRotation(TiBlob blob, HashMap args)
@@ -116,14 +118,9 @@ public class ImageFactoryModule extends KrollModule
 			KrollDict newArgs = (args != null) ? new KrollDict(args) : new KrollDict();
 			newArgs.put(TiPropertyNames.DEGREES, 0);
 			if (!newArgs.containsKey(TiPropertyNames.FORMAT)) {
-				String mimeType = blob.getMimeType();
-				if (mimeType != null) {
-					mimeType = mimeType.toLowerCase();
-					if (mimeType.endsWith("png")) {
-						newArgs.put(TiPropertyNames.FORMAT, ImageFactoryModule.PNG);
-					} else if (mimeType.endsWith("jpg") || mimeType.endsWith("jpeg")) {
-						newArgs.put(TiPropertyNames.FORMAT, ImageFactoryModule.JPEG);
-					}
+				ImageFormatType formatType = ImageFormatType.fromMimeTye(blob.getMimeType());
+				if (formatType != null) {
+					newArgs.put(TiPropertyNames.FORMAT, formatType.toTitaniumIntegerId());
 				}
 			}
 			TiBlob newBlob = ImageFactory.imageRotate(blob, newArgs);
@@ -213,7 +210,7 @@ public class ImageFactoryModule extends KrollModule
 	}
 
 	@Kroll.method
-	public TiBlob compress(TiBlob blob, float quality)
+	public TiBlob compress(TiBlob blob, float quality, @Kroll.argument(optional = true) Object formatId)
 	{
 		// Do not continue if not given a blob.
 		if (blob == null) {
@@ -223,7 +220,7 @@ public class ImageFactoryModule extends KrollModule
 		// Compress blob's image to JPEG with given quality. (Quality range: 0.0 - 1.0)
 		// Calling imageRotate() with degrees 0 forces image to upright position in case it has EXIF orientation.
 		KrollDict args = new KrollDict();
-		args.put(TiPropertyNames.FORMAT, ImageFactoryModule.JPEG);
+		args.put(TiPropertyNames.FORMAT, TiConvert.toInt(formatId, ImageFactoryModule.JPEG));
 		args.put(TiPropertyNames.QUALITY, quality);
 		args.put(TiPropertyNames.DEGREES, 0);
 		return ImageFactory.imageRotate(blob, args);
@@ -263,10 +260,14 @@ public class ImageFactoryModule extends KrollModule
 		// Write blob's bitmap to file with requested compression format.
 		boolean wasSuccessful = false;
 		try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+			// Make the image upright in case it has an EXIF orientation.
+			// Note: Method will return same blob reference if image is already upright.
 			KrollDict args = new KrollDict();
-			args.put(TiPropertyNames.FORMAT, formatType.toTitaniumIntegerId());
 			args.put(TiPropertyNames.QUALITY, quality);
 			blob = imageAsUpright(blob, args);
+
+			// Write the image file to the requested format.
+			args.put(TiPropertyNames.FORMAT, formatType.toTitaniumIntegerId());
 			wasSuccessful = ImageFactory.compressToStream(blob.getImage(), args, outputStream);
 		} catch (Throwable ex) {
 			Log.e(TAG, "Failed to compress image to file.", ex);

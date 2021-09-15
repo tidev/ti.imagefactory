@@ -14,7 +14,8 @@ import org.appcelerator.titanium.util.TiMimeTypeHelper;
 /** Enum type indicating an image format type such as PNG or JPEG. */
 public enum ImageFormatType {
 	JPEG(0, Bitmap.CompressFormat.JPEG, new String[] { "jpeg", "jpg" }),
-	PNG(1, Bitmap.CompressFormat.PNG, new String[] { "png" });
+	PNG(1, Bitmap.CompressFormat.PNG, new String[] { "png" }),
+	WEBP(2, Bitmap.CompressFormat.WEBP, new String[] { "webp" });
 
 	private final int titaniumIntegerId;
 	private final Bitmap.CompressFormat compressFormat;
@@ -138,6 +139,29 @@ public enum ImageFormatType {
 				if (nextExtension.equals(fileExtension)) {
 					return nextType;
 				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Fetches an image format matching the given mime type.
+	 * @param mimeType The mime type string such as "image/png", "image/jpeg", etc. Can be null.
+	 * @return
+	 * Returns the matching image format type for the given mime type.
+	 * <p/>
+	 * Returns null if given an unsupported mime type or a null argument.
+	 */
+	public static ImageFormatType fromMimeTye(String mimeType)
+	{
+		if (mimeType == null) {
+			return null;
+		}
+
+		mimeType = mimeType.toLowerCase();
+		for (ImageFormatType nextObject : ImageFormatType.values()) {
+			if (nextObject.mimeType.equals(mimeType)) {
+				return nextObject;
 			}
 		}
 		return null;

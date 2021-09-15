@@ -20,7 +20,6 @@ import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.util.TiConvert;
-import org.appcelerator.titanium.util.TiMimeTypeHelper;
 
 public class ImageFactory
 {
