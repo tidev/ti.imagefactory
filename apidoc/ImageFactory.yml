@@ -12,91 +12,78 @@ properties:
     type: Number
     permission: read-only
     value: 0
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_CROP
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 1
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_RESIZE
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 2
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_THUMBNAIL
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 3
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_ROUNDEDCORNER
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 4
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_TRANSPARENTBORDER
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 5
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_ALPHA
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 6
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_ROTATE
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 7
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_DEFAULT
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 0
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_NONE
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 1
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_LOW
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 2
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_MEDIUM
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 4
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_HIGH
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 3
-    platforms: [android, iphone, ipad]
 
   - name: JPEG
     summary: Possible value of the `format` property in the various image transform methods' options objects
@@ -123,7 +110,6 @@ properties:
 methods:
   - name: compress
     summary: Compresses an image to JPEG and returns it as a new image blob.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: The image to compress to a JPEG or whatever the optional "format" argument is set to.
@@ -132,12 +118,11 @@ methods:
         summary: Compression quality ranging from 0.0 to 1.0.
         type: Number
       - name: format
-        summary: The output format of the image.
+        summary: The output format of the image. (Only supported on Android. iOS always compresses to JPEG.)
         type: Number
         default: Modules.ImageFactory.JPEG
         constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
         optional: true
-        platforms: [android]
     returns:
         type: Titanium.Blob
 
@@ -160,7 +145,6 @@ methods:
 
   - name: imageWithRotation
     summary: Creates a new image by creating a copy of the given image that is rotated.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -173,7 +157,6 @@ methods:
 
   - name: imageWithAlpha
     summary: Creates a new image by creating a copy of the given image, adding an alpha channel if it doesn't already have one.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -188,7 +171,6 @@ methods:
     summary: |
         Creates a new image by creating a copy of the given image, adding a transparent border of the given size around its edges.
         The size of the image will be expanded by the specified border size.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -201,7 +183,6 @@ methods:
 
   - name: imageWithRoundedCorner
     summary: Creates a new image by creating a copy of the given image with rounded corners.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -214,7 +195,6 @@ methods:
 
   - name: imageAsThumbnail
     summary: Creates a new image by creating a copy of the given image that is squared to the thumbnail size.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -227,7 +207,6 @@ methods:
 
   - name: imageAsResized
     summary: Creates a new image by creating a copy of the given image that is rescaled to the specified size.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -240,7 +219,6 @@ methods:
   
   - name: imageAsCropped
     summary: Creates a new image by creating a copy of the given image that is cropped to the specified bounds.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -253,7 +231,6 @@ methods:
 
   - name: imageTransform
     summary: Creates a new image by applying a sequence of transformations to the image.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -304,7 +281,6 @@ properties:
     type: Number
     summary: The size of the border in pixels
     default: 1
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number
@@ -330,13 +306,11 @@ properties:
     type: Number
     summary: The size of the border in pixels
     default: 1
-    platforms: [android, iphone, ipad]
 
   - name: cornerRadius
     type: Number
     summary: The radius of the corner edges in pixels
     default: 0
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number
@@ -362,19 +336,16 @@ properties:
     type: Number
     summary: The size of the thumbnail in pixels
     default: 48
-    platforms: [android, iphone, ipad]
 
   - name: borderSize
     type: Number
     summary: The size of the border in pixels
     default: 1
-    platforms: [android, iphone, ipad]
 
   - name: cornerRadius
     type: Number
     summary: The radius of the corner edges in pixels
     default: 0
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number
@@ -397,7 +368,6 @@ properties:
         * imagefactory.QUALITY\_LOW
         * imagefactory.QUALITY\_MEDIUM
         * imagefactory.QUALITY\_HIGH
-    platforms: [android, iphone, ipad]
     constants: Modules.ImageFactory.QUALITY_*
     default: 0.7 (android), Modules.ImageFactory.QUALITY_HIGH (ios)
 
@@ -416,14 +386,12 @@ properties:
     summary: The width of the resized image in pixels
     default: original image width
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: height
     type: Number
     summary: The height of the resized image in pixels
     default: original image height
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number
@@ -446,7 +414,6 @@ properties:
         * imagefactory.QUALITY\_LOW
         * imagefactory.QUALITY\_MEDIUM
         * imagefactory.QUALITY\_HIGH
-    platforms: [android, iphone, ipad]
     constants: Modules.ImageFactory.QUALITY_*
     default: 0.7 (android), Modules.ImageFactory.QUALITY_HIGH (ios)
 
@@ -464,28 +431,24 @@ properties:
     summary: The width of the resized image in pixels
     default: original image width
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: height
     type: Number
     summary: The height of the resized image in pixels
     default: original image height
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: x
     type: Number
     summary: The x-coordinate of the upper-left corner of the bounds
     default: image center - width / 2
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: y
     type: Number
     summary: The y-coordinate of the upper-left corner of the bounds
     default: image center - height / 2
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number

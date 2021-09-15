@@ -152,7 +152,7 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
   UIImage *sourceImage = [blob image];
   UIImage *newImage = [TiImageFactory imageUpright:sourceImage];
   if (newImage && (newImage != sourceImage)) {
-     blob = [[[TiBlob alloc] initWithImage:newImage] autorelease];
+    blob = [[[TiBlob alloc] initWithImage:newImage] autorelease];
   }
   return blob;
 }

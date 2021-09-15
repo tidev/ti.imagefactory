@@ -16,8 +16,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.util.TiConvert;
 
