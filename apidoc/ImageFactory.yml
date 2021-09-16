@@ -373,8 +373,8 @@ properties:
 
   - name: dither
     type: Boolean
-    summary: Indicates if dithering should be applied while scaling. May provide better quality 
-    default: true
+    summary: Indicates if dithering should be applied while scaling.
+    default: false
     platforms: [android]
 
 ---

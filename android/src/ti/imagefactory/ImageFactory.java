@@ -205,7 +205,6 @@ public class ImageFactory
 		int size = args.optInt(TiPropertyNames.SIZE, 48);
 		int borderSize = args.optInt(TiPropertyNames.BORDER_SIZE, 1);
 		int cornerRadius = args.optInt(TiPropertyNames.CORNER_RADIUS, 0);
-		boolean dither = args.optBoolean(TiPropertyNames.DITHER, true);
 
 		// Create a bitmap crop-scaled to the given thumbnail size.
 		Matrix matrix = createUprightMatrixFrom(bitmap, exifOrientation);
@@ -229,9 +228,7 @@ public class ImageFactory
 		// Draw the image to the canvas (clipped to the path) and centered.
 		int x = borderSize - (tempBitmap.getWidth() - size) / 2;
 		int y = borderSize - (tempBitmap.getHeight() - size) / 2;
-		Paint paint = new Paint();
-		paint.setDither(dither);
-		canvas.drawBitmap(tempBitmap, (float) x, (float) y, paint);
+		canvas.drawBitmap(tempBitmap, (float) x, (float) y, createBitmapPaintFrom(args));
 
 		// Delete the temporary bitmap.
 		tempBitmap.recycle();
@@ -291,7 +288,7 @@ public class ImageFactory
 			path.addRoundRect(new RectF(rect), (float) cornerRadius, (float) cornerRadius, Path.Direction.CCW);
 			canvas.clipPath(path);
 		}
-		canvas.drawBitmap(bitmap, createUprightMatrixFrom(bitmap, exifOrientation), null);
+		canvas.drawBitmap(bitmap, createUprightMatrixFrom(bitmap, exifOrientation), createBitmapPaintFrom(args));
 		return newBitmap;
 	}
 
@@ -343,7 +340,7 @@ public class ImageFactory
 		Canvas canvas = new Canvas(newBitmap);
 		Matrix matrix = createUprightMatrixFrom(bitmap, exifOrientation);
 		matrix.postTranslate((float) borderSize, (float) borderSize);
-		canvas.drawBitmap(bitmap, matrix, null);
+		canvas.drawBitmap(bitmap, matrix, createBitmapPaintFrom(args));
 		return newBitmap;
 	}
 
@@ -400,7 +397,7 @@ public class ImageFactory
 			int uprightHeight = !exifOrientation.isSideways() ? bitmap.getHeight() : bitmap.getWidth();
 			newBitmap = Bitmap.createBitmap(uprightWidth, uprightHeight, Bitmap.Config.ARGB_8888);
 			Canvas canvas = new Canvas(newBitmap);
-			canvas.drawBitmap(bitmap, createUprightMatrixFrom(bitmap, exifOrientation), null);
+			canvas.drawBitmap(bitmap, createUprightMatrixFrom(bitmap, exifOrientation), createBitmapPaintFrom(args));
 		}
 		return newBitmap;
 	}
@@ -484,5 +481,14 @@ public class ImageFactory
 			}
 		}
 		return matrix;
+	}
+
+	private static Paint createBitmapPaintFrom(KrollDict args)
+	{
+		Paint paint = new Paint();
+		paint.setAntiAlias(true);
+		paint.setDither((args != null) ? args.optBoolean(TiPropertyNames.DITHER, false) : false);
+		paint.setFilterBitmap(true);
+		return paint;
 	}
 }

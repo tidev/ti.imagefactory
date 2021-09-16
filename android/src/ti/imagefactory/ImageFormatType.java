@@ -199,7 +199,7 @@ public enum ImageFormatType {
 			return defaultType;
 		}
 
-		int titaniumIntegerId = TiConvert.toInt(options.get("format"), -1);
+		int titaniumIntegerId = TiConvert.toInt(options.get(TiPropertyNames.FORMAT), -1);
 		ImageFormatType formatType = ImageFormatType.fromTitaniumIntegerId(titaniumIntegerId);
 		if (formatType == null) {
 			formatType = defaultType;
