@@ -104,7 +104,6 @@ properties:
     type: Number
     permission: read-only
     value: 2
-    since: "5.1.0"
     platforms: [android]
 
 methods:
@@ -128,7 +127,6 @@ methods:
 
   - name: compressToFile
     summary: Compresses the given blob to an image file.
-    platforms: [android]
     parameters:
       - name: blob
         summary: Image to to write to file.
@@ -137,7 +135,9 @@ methods:
         summary: Compression quality ranging from 0.0 to 1.0.
         type: Number
       - name: fileUrl
-        summary: File path to write the image to. Supports extensions ".png", ".jpg", and ".jpeg".
+        summary: |
+          File path to write the image to. Supports extensions ".png", ".jpg", and ".jpeg".
+          Android also supports ".webp".
         type: String
     returns:
         summary: Returns true if successfully compressed image to file. Returns false if failed.

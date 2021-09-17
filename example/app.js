@@ -55,6 +55,13 @@ tableView.addEventListener('click', (e) => {
 		});
 		tableView.appendRow(row);
 	}
+	if (OS_ANDROID) {
+		const row = Ti.UI.createTableViewRow({ title: 'compress() PNG' });
+		row.addEventListener('click', () => {
+			showImageWindowFor(ImageFactory.compress(sourceBlob, 1.0, ImageFactory.PNG));
+		});
+		tableView.appendRow(row);
+	}
 	{
 		const row = Ti.UI.createTableViewRow({ title: 'compress() JPEG 5% quality' });
 		row.addEventListener('click', () => {
@@ -83,7 +90,16 @@ tableView.addEventListener('click', (e) => {
 		});
 		tableView.appendRow(row);
 	}
-	if (OS_ANDROID) {
+	{
+		const row = Ti.UI.createTableViewRow({ title: 'compressToFile() PNG' });
+		row.addEventListener('click', () => {
+			const file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'CompressTest.png');
+			ImageFactory.compressToFile(sourceBlob, 1.0, file.nativePath);
+			showImageWindowFor(file.read());
+		});
+		tableView.appendRow(row);
+	}
+	{
 		const row = Ti.UI.createTableViewRow({ title: 'compressToFile() JPEG 5% quality' });
 		row.addEventListener('click', () => {
 			const file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'CompressTest.jpg');
@@ -92,7 +108,7 @@ tableView.addEventListener('click', (e) => {
 		});
 		tableView.appendRow(row);
 	}
-	if (OS_ANDROID) {
+	{
 		const row = Ti.UI.createTableViewRow({ title: 'compressToFile() JPEG 100% quality' });
 		row.addEventListener('click', () => {
 			const file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'CompressTest.jpg');

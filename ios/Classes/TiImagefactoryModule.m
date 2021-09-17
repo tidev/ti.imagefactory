@@ -196,4 +196,45 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
   return [[[TiBlob alloc] initWithData:UIImageJPEGRepresentation(image, qualityValue) mimetype:@"image/jpeg"] autorelease];
 }
 
+- (id)compressToFile:(id)args
+{
+  // Fetch arguments.
+  TiBlob *blob;
+  NSNumber *qualityObject;
+  NSString *filePath;
+  ENSURE_ARG_AT_INDEX(blob, args, 0, TiBlob);
+  ENSURE_ARG_AT_INDEX(qualityObject, args, 1, NSNumber);
+  ENSURE_ARG_AT_INDEX(filePath, args, 2, NSString);
+
+  // Fetch blob's image in upright form.
+  UIImage *image = [blob image];
+  image = [TiImageFactory imageUpright:image];
+
+  // Compress the image to the format specified by the given path's file extension.
+  NSData *compressedData = nil;
+  NSString *fileExtension = [filePath pathExtension];
+  if ([fileExtension caseInsensitiveCompare:@"png"] == 0) {
+    compressedData = UIImagePNGRepresentation(image);
+  } else {
+    float qualityValue = [TiUtils floatValue:qualityObject def:1.0];
+    compressedData = UIImageJPEGRepresentation(image, qualityValue);
+  }
+  if (compressedData == nil) {
+    return NUMBOOL(NO);
+  }
+
+  // Create the directory tree if it doesn't already exist.
+  NSURL *fileUrl = [TiUtils toURL:filePath proxy:self];
+  NSURL *parentDirUrl = [fileUrl URLByDeletingLastPathComponent];
+  [NSFileManager.defaultManager createDirectoryAtURL:parentDirUrl withIntermediateDirectories:YES attributes:nil error:nil];
+
+  // Write to compressed image data to file.
+  NSError *err = nil;
+  [compressedData writeToURL:fileUrl options:NSDataWritingAtomic error:&err];
+  if (err != nil) {
+    NSLog(@"[ERROR] ImageFactory.compressToFile() failed for path \"%@\" - reason: %@", fileUrl, err);
+  }
+  return NUMBOOL(err != nil);
+}
+
 @end
