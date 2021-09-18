@@ -30,6 +30,7 @@ public class ImageFactory
 		if (blob == null) {
 			return null;
 		}
+		args = updateFormatOption(args, blob.getMimeType(), false);
 		Bitmap oldBitmap = blob.getImage();
 		Bitmap newBitmap = imageRotate(oldBitmap, args, TiExifOrientation.from(blob));
 		return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
@@ -61,6 +62,7 @@ public class ImageFactory
 		if (blob == null) {
 			return null;
 		}
+		args = updateFormatOption(args, blob.getMimeType(), false);
 		Bitmap oldBitmap = blob.getImage();
 		Bitmap newBitmap = imageCrop(oldBitmap, args, TiExifOrientation.from(blob));
 		return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
@@ -142,6 +144,7 @@ public class ImageFactory
 		if (blob == null) {
 			return null;
 		}
+		args = updateFormatOption(args, blob.getMimeType(), false);
 		Bitmap oldBitmap = blob.getImage();
 		Bitmap newBitmap = imageResize(oldBitmap, args, TiExifOrientation.from(blob));
 		return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
@@ -181,6 +184,8 @@ public class ImageFactory
 		if (blob == null) {
 			return null;
 		}
+		boolean isAlphaRequired = (args != null) && (args.optInt(TiPropertyNames.CORNER_RADIUS, 0) > 0);
+		args = updateFormatOption(args, blob.getMimeType(), isAlphaRequired);
 		Bitmap oldBitmap = blob.getImage();
 		Bitmap newBitmap = imageThumbnail(oldBitmap, args, TiExifOrientation.from(blob));
 		return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
@@ -239,20 +244,11 @@ public class ImageFactory
 
 	public static TiBlob imageRoundedCorner(TiBlob blob, KrollDict args)
 	{
-		// Do not continue if not given a blob.
 		if (blob == null) {
 			return null;
 		}
-
-		// Make sure to compress the new image to a format that supports an alpha channel.
-		if (args == null) {
-			args = new KrollDict();
-		}
-		if (ImageFormatType.from(args).isAlphaSupported() == false) {
-			args.put(TiPropertyNames.FORMAT, ImageFactoryModule.PNG);
-		}
-
-		// Create a new image with rounded corners.
+		boolean isAlphaRequired = (args != null) && (args.optInt(TiPropertyNames.CORNER_RADIUS, 0) > 0);
+		args = updateFormatOption(args, blob.getMimeType(), isAlphaRequired);
 		Bitmap oldBitmap = blob.getImage();
 		Bitmap newBitmap = imageRoundedCorner(oldBitmap, args, TiExifOrientation.from(blob));
 		return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
@@ -294,20 +290,10 @@ public class ImageFactory
 
 	public static TiBlob imageTransparentBorder(TiBlob blob, KrollDict args)
 	{
-		// Do not continue if a blob was not provided.
 		if (blob == null) {
 			return null;
 		}
-
-		// Make sure to compress the new image to a format that supports an alpha channel.
-		if (args == null) {
-			args = new KrollDict();
-		}
-		if (ImageFormatType.from(args).isAlphaSupported() == false) {
-			args.put(TiPropertyNames.FORMAT, ImageFactoryModule.PNG);
-		}
-
-		// Create a new bitmap with an invisible border surrounding the given bitmap.
+		args = updateFormatOption(args, blob.getMimeType(), true);
 		Bitmap oldBitmap = blob.getImage();
 		Bitmap newBitmap = imageTransparentBorder(oldBitmap, args, TiExifOrientation.from(blob));
 		return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
@@ -357,15 +343,8 @@ public class ImageFactory
 			return blob;
 		}
 
-		// Make sure to compress the new image to a format that supports an alpha channel.
-		if (args == null) {
-			args = new KrollDict();
-		}
-		if (ImageFormatType.from(args).isAlphaSupported() == false) {
-			args.put(TiPropertyNames.FORMAT, ImageFactoryModule.PNG);
-		}
-
 		// Create a copy of the given image with an alpha channel.
+		args = updateFormatOption(args, blob.getMimeType(), true);
 		Bitmap oldBitmap = blob.getImage();
 		Bitmap newBitmap = imageAlpha(oldBitmap, args, TiExifOrientation.from(blob));
 		return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
@@ -450,6 +429,23 @@ public class ImageFactory
 
 		// Compress bitmap to requested image format (such as JPEG) to given stream.
 		return bitmap.compress(formatType.toCompressFormat(), quality, outputStream);
+	}
+
+	private static KrollDict updateFormatOption(KrollDict args, String mimeType, boolean isAlphaRequired)
+	{
+		if (args == null) {
+			args = new KrollDict();
+		}
+
+		ImageFormatType formatType = ImageFormatType.from(args, null);
+		if (formatType == null) {
+			formatType = ImageFormatType.fromMimeType(mimeType);
+		}
+		if ((formatType == null) || (isAlphaRequired && !formatType.isAlphaSupported())) {
+			formatType = isAlphaRequired ? ImageFormatType.PNG : ImageFormatType.JPEG;
+		}
+		args.put(TiPropertyNames.FORMAT, formatType.toTitaniumIntegerId());
+		return args;
 	}
 
 	private static Matrix createUprightMatrixFrom(TiBlob blob)

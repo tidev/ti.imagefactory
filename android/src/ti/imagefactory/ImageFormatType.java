@@ -152,7 +152,7 @@ public enum ImageFormatType {
 	 * <p/>
 	 * Returns null if given an unsupported mime type or a null argument.
 	 */
-	public static ImageFormatType fromMimeTye(String mimeType)
+	public static ImageFormatType fromMimeType(String mimeType)
 	{
 		if (mimeType == null) {
 			return null;

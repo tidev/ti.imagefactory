@@ -118,7 +118,7 @@ public class ImageFactoryModule extends KrollModule
 			KrollDict newArgs = (args != null) ? new KrollDict(args) : new KrollDict();
 			newArgs.put(TiPropertyNames.DEGREES, 0);
 			if (!newArgs.containsKey(TiPropertyNames.FORMAT)) {
-				ImageFormatType formatType = ImageFormatType.fromMimeTye(blob.getMimeType());
+				ImageFormatType formatType = ImageFormatType.fromMimeType(blob.getMimeType());
 				if (formatType != null) {
 					newArgs.put(TiPropertyNames.FORMAT, formatType.toTitaniumIntegerId());
 				}
