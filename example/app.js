@@ -11,6 +11,8 @@ const ImageFactory = require('ti.imagefactory');
 
 let navigationWindow = null;
 const imageMap = {
+	'PNG - Opaque': 'assets/images/IconOpaque.png',
+	'PNG - Transparent': 'assets/images/IconTransparent.png',
 	'JPEG - Upright': 'assets/images/ExifUpright.jpeg',
 	'JPEG - EXIF Rotate 90': 'assets/images/ExifRotate90.jpeg',
 	'JPEG - EXIF Rotate 180': 'assets/images/ExifRotate180.jpeg',
@@ -28,7 +30,13 @@ const tableView = Ti.UI.createTableView({
 });
 tableView.addEventListener('click', (e) => {
 	// Load the selected image as a blob.
-	const sourceBlob = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, imageMap[e.row.title]).read();
+	let sourceBlob = null;
+	if (OS_IOS) {
+		sourceBlob = Ti.Filesystem.getAsset(imageMap[e.row.title]);
+	}
+	if (!sourceBlob) {
+		sourceBlob = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, imageMap[e.row.title]).read();
+	}
 
 	// Displays the given blob's image in a child window.
 	function showImageWindowFor(imageBlob) {
