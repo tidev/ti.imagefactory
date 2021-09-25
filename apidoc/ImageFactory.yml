@@ -244,7 +244,20 @@ methods:
         type: Object
     returns:
         type: Titanium.Blob
-  
+
+  - name: metadataFrom
+    summary: Gets a dictionary of EXIF metadata from the given blob's image.
+    description: |
+        The returned dictionary's string keys match the "tag" names listed in the specification linked below.
+
+        https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml
+    parameters:
+      - name: blob
+        summary: Image to read EXIF metadata from.
+        type: Titanium.Blob
+    returns:
+        type: Object
+
 ---
 name: RotationOptions
 summary: Shape of the Object passed to the [imageWithRotation](Modules.ImageFactory.imageWithRotation) method

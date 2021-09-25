@@ -7,7 +7,6 @@
 package ti.imagefactory;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +14,7 @@ import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.io.TiBaseFile;
 import org.appcelerator.titanium.io.TiFileFactory;
@@ -273,5 +273,12 @@ public class ImageFactoryModule extends KrollModule
 			Log.e(TAG, "Failed to compress image to file.", ex);
 		}
 		return wasSuccessful;
+	}
+
+	@Kroll.method
+	public KrollDict metadataFrom(TiBlob blob)
+	{
+		ImageMetadata metadata = ImageMetadata.from(blob);
+		return (metadata != null) ? metadata.getEntries() : null;
 	}
 }

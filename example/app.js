@@ -38,15 +38,57 @@ tableView.addEventListener('click', (e) => {
 		sourceBlob = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, imageMap[e.row.title]).read();
 	}
 
+	// Displays the given blob's image metadata/exif info in a child window.
+	function showMetadataWindowFor(imageBlob) {
+		const metadataDictionary = ImageFactory.metadataFrom(imageBlob);
+		const windowSettings = { title: 'Metadata' };
+		if (OS_IOS) {
+			windowSettings.backgroundColor = 'white';
+		}
+		const metadataWindow = Ti.UI.createWindow(windowSettings);
+		const scrollView = Ti.UI.createScrollView({
+			layout: 'vertical',
+			scrollType: 'vertical',
+			showVerticalScrollIndicator: true,
+			width: Ti.UI.FILL,
+			height: Ti.UI.FILL,
+		});
+		scrollView.add(Ti.UI.createLabel({
+			text: '\n' + JSON.stringify(metadataDictionary, null, 4) + '\n',
+			left: 10,
+			right: 10,
+		}));
+		metadataWindow.add(scrollView);
+		navigationWindow.openWindow(metadataWindow, { animated: true });
+	}
+
 	// Displays the given blob's image in a child window.
 	function showImageWindowFor(imageBlob) {
 		const windowSettings = { title: 'Resulting Image' };
-		if (OS_IOS) {
+		if (OS_IOS && imageBlob) {
+			const metadataButton = Ti.UI.createButton({
+				systemButton: Ti.UI.iOS.SystemButton.INFO_LIGHT,
+			});
+			metadataButton.addEventListener('click', () => {
+				showMetadataWindowFor(imageBlob);
+			});
 			windowSettings.backgroundColor = 'white';
+			windowSettings.rightNavButton = metadataButton;
 		}
 		const imageWindow = Ti.UI.createWindow(windowSettings);
 		if (imageBlob) {
 			imageWindow.add(Ti.UI.createImageView({ image: imageBlob, autorotate: false }));
+			if (OS_ANDROID) {
+				imageWindow.activity.onCreateOptionsMenu = (e) => {
+					const menuItem = e.menu.add({
+						title: 'View Metadata',
+						showAsAction: Ti.Android.SHOW_AS_ACTION_NEVER,
+					});
+					menuItem.addEventListener('click', () => {
+						showMetadataWindowFor(imageBlob);
+					});
+				};
+			}
 		} else {
 			imageWindow.add(Ti.UI.createLabel({ text: 'Image factory returned null.' }));
 		}

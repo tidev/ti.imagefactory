@@ -237,4 +237,15 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
   return NUMBOOL(err != nil);
 }
 
+- (id)metadataFrom:(id)args
+{
+  ENSURE_SINGLE_ARG(args, TiBlob);
+  TiBlob *blob = (TiBlob *)args;
+  NSData *imageData = [blob data];
+  CGImageSourceRef sourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, NULL);
+  NSDictionary *exifData = (NSDictionary *)CGImageSourceCopyPropertiesAtIndex(sourceRef, 0, NULL);
+  CFRelease(sourceRef);
+  return [exifData autorelease];
+}
+
 @end
