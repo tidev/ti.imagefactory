@@ -12,7 +12,7 @@ started with using this module in your application.
 To access this module from JavaScript, you would do the following:
 
 ```js
-var ImageFactory = require('ti.imagefactory');
+const ImageFactory = require('ti.imagefactory');
 ```
 
 ## Methods
@@ -36,8 +36,8 @@ Creates a new image by creating a copy of the given image, adding an alpha chann
 * Image blob[blob]: Image to transform
 * Options[dictionary]: A dictionary specifying the options for the transformation
     * iOS: Currently there are no properties for this method -- specify an empty dictionary
-    * Android: format [int]: The output format of the image: either ImageFactory.PNG or ImageFactory.JPEG (default: ImageFactory.JPEG)
-    * Android: quality[float]: The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+    * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
+    * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
 
 ### imageWithTransparentBorder(blob, options)
 
@@ -48,8 +48,8 @@ Creates a new image by creating a copy of the given image, adding a transparent 
 * Image blob[blob]: Image to transform
 * Options[dictionary]: A dictionary specifying the options for the transformation
     * borderSize[int]: The size of the border (default: 1)
-    * Android: format [int]: The output format of the image: either ImageFactory.PNG or ImageFactory.JPEG (default: ImageFactory.JPEG)
-    * Android: quality[float]: The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+    * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
+    * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
 
 ### imageWithRoundedCorner(blob, options)
 
@@ -61,8 +61,8 @@ Creates a new image by creating a copy of the given image with rounded corners.
 * Options[dictionary]: A dictionary specifying the options for the transformation
    * borderSize[int]: The size of the border (default: 1)
    * cornerRadius[int]: The radius of the corner edges (default: 0)
-   * Android: format [int]: The output format of the image: either ImageFactory.PNG or ImageFactory.JPEG (default: ImageFactory.JPEG).
-   * Android: quality[float]: The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7).
+   * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG).
+   * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7).
 
 ### imageAsThumbnail(blob, options)
 
@@ -81,9 +81,9 @@ Creates a new image by creating a copy of the given image that is squared to the
         * imagefactory.QUALITY\_LOW
         * imagefactory.QUALITY\_MEDIUM
         * imagefactory.QUALITY\_HIGH
-    * Android: quality[float]: The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
-    * Android: dither[boolean]: Indicates if dithering should be applied while scaling. May provide better quality (default: true)
-    * Android: format [int]: The output format of the image: either ImageFactory.PNG or ImageFactory.JPEG (default: ImageFactory.JPEG)
+    * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+    * Android: dither[boolean]: Indicates if dithering should be applied while scaling. (default: false)
+    * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
 
 ### imageAsResized(blob, options)
 
@@ -103,7 +103,7 @@ Creates a new image by creating a copy of the given image that is rescaled to th
         * imagefactory.QUALITY\_MEDIUM
         * imagefactory.QUALITY\_HIGH
     * Android. format [int]: The output format of the image: either ImageFactory.PNG or ImageFactory.JPEG (default: ImageFactory.JPEG)
-    * quality[float]: The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+    * quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
 
 ### imageAsCropped(blob, options)
 
@@ -117,8 +117,8 @@ Creates a new image by creating a copy of the given image that is cropped to the
     * height[int]: The height of the new image (default: image height)
     * x[int]: The x-coordinate of the upper-left corner of the bounds (default: image center - width / 2)
     * y[int]: The y-coordinate of the upper-left corner of the bounds (default: image center - height / 2)
-    * Android: format [int]: The output format of the image: either ImageFactory.PNG or ImageFactory.JPEG (default: ImageFactory.JPEG)
-    * Android: quality[float]: The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+    * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
+    * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
 
 ### imageTransform(blob, options)
 
@@ -137,18 +137,29 @@ Creates a new image by applying a sequence of transformations to the image.
         * imagefactory.TRANSFORM\_ALPHA
     * options as described in the above transforms
 
-### compress(blob, quality)
+### compress(blob, quality [, format])
 
 Creates a new image by creating a copy of the given image and applying the specified compression quality.
 
 #### Arguments
 
 * Image blob[blob]: Image to compress
-* Compression Quality[float]; The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 1.0)
+* Compression Quality[float]; The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality).
+* Android (optional): format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
+
+### compressToFile(blob, quality, fileUrl)
+
+Compresses the given blob to an image file.
+
+#### Arguments
+
+* Image blob[blob]: Image to write to file
+* Compression Quality[float]; The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality).
+* fileUrl [string]: File path to write the image to. Supports extensions ".png", ".jpg", and ".jpeg". Android also supports ".webp".
 
 ## Usage
 
-See [iOS example](https://github.com/appcelerator-modules/ti.imagefactory/blob/stable/ios/example/app.js) and [Android example](https://github.com/appcelerator-modules/ti.imagefactory/blob/stable/android/example/app.js).
+See [example](https://github.com/appcelerator-modules/ti.imagefactory/blob/stable/example/app.js).
 
 ## License
 
