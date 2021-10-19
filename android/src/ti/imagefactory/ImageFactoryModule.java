@@ -1,36 +1,30 @@
 /**
  * Ti.Imagefactory Module
- * Copyright (c) 2011-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2021 by Axway, Inc. All Rights Reserved.
  * Please see the LICENSE included with this distribution for details.
  */
 
 package ti.imagefactory;
 
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.util.Log;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.io.TiBaseFile;
 import org.appcelerator.titanium.io.TiFileFactory;
-import org.appcelerator.titanium.view.TiDrawableReference;
+import org.appcelerator.titanium.util.TiConvert;
 
 @Kroll.module(name = "ImageFactory", id = "ti.imagefactory")
 public class ImageFactoryModule extends KrollModule
 {
 	// Standard Debugging variables
-	private static final String LCAT = "ImageFactoryModule";
+	private static final String TAG = "ImageFactoryModule";
 
 	// Transform constants defined to match iOS values
 	@Kroll.constant
@@ -65,270 +59,226 @@ public class ImageFactoryModule extends KrollModule
 
 	// Image format
 	@Kroll.constant
-	public static final int JPEG = 0;
+	public static final int JPEG = ImageFormatType.JPEG.toTitaniumIntegerId();
 	@Kroll.constant
-	public static final int PNG = 1;
-
-	public ImageFactoryModule()
-	{
-		super();
-	}
-
-	// Image Transform Helpers
-
-	private Bitmap imageTransform(int type, Bitmap image, KrollDict args)
-	{
-		switch (type) {
-			case TRANSFORM_CROP:
-				return ImageFactory.imageCrop(image, args);
-			case TRANSFORM_RESIZE:
-				return ImageFactory.imageResize(image, args);
-			case TRANSFORM_THUMBNAIL:
-				return ImageFactory.imageThumbnail(image, args);
-			case TRANSFORM_ROUNDEDCORNER:
-				return ImageFactory.imageRoundedCorner(image, args);
-			case TRANSFORM_TRANSPARENTBORDER:
-				return ImageFactory.imageTransparentBorder(image, args);
-			case TRANSFORM_ALPHA:
-				return ImageFactory.imageAlpha(image, args);
-			case TRANSFORM_ROTATE:
-				return ImageFactory.imageRotate(image, args);
-		}
-
-		return image;
-	}
-
-	private CompressFormat getFormat(KrollDict args)
-	{
-		int format = args.optInt("format", JPEG);
-		switch (format) {
-			case ImageFactoryModule.PNG:
-				return CompressFormat.PNG;
-			case ImageFactoryModule.JPEG:
-				return CompressFormat.JPEG;
-			default:
-				Log.e(LCAT, "Unknown format provided! Defaulting to JPEG!");
-				return CompressFormat.JPEG;
-		}
-	}
-
-	private String getStringFormat(CompressFormat format)
-	{
-		switch (format) {
-			case PNG:
-				return "image/png";
-			case JPEG:
-			default:
-				return "image/jpeg";
-		}
-	}
-
-	private int getQuality(KrollDict args)
-	{
-		if (!args.containsKey("quality"))
-			return 70;
-		return (int) (Float.parseFloat(args.getString("quality")) * 100);
-	}
-
-	private void coerceDimensionsIntoBlob(Bitmap image, TiBlob blob)
-	{
-		try {
-			Field field = TiBlob.class.getDeclaredField("width");
-			field.setAccessible(true);
-			field.setInt(blob, image.getWidth());
-			field = TiBlob.class.getDeclaredField("height");
-			field.setAccessible(true);
-			field.setInt(blob, image.getHeight());
-		} catch (Exception e) {
-			// ** cry **
-		}
-	}
-
-	private TiBlob imageTransform(int type, TiBlob blob, KrollDict args)
-	{
-		TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), blob);
-		Bitmap image = imageTransform(type, ref.getBitmap(), args);
-
-		if (image == null)
-			return null;
-
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte data[] = new byte[0];
-		CompressFormat format = getFormat(args);
-		if (image.compress(format, getQuality(args), bos)) {
-			data = bos.toByteArray();
-		}
-
-		TiBlob result = TiBlob.blobFromData(data, getStringFormat(format));
-		coerceDimensionsIntoBlob(image, result);
-
-		// [MOD-309] Free up memory to work around issue in Android
-		image.recycle();
-		image = null;
-		ref = null;
-
-		return result;
-	}
-
-	// Public Image Methods
+	public static final int PNG = ImageFormatType.PNG.toTitaniumIntegerId();
+	@Kroll.constant
+	public static final int WEBP = ImageFormatType.WEBP.toTitaniumIntegerId();
 
 	@Kroll.method
 	public TiBlob imageWithRotation(TiBlob blob, HashMap args)
 	{
-		return imageTransform(TRANSFORM_ROTATE, blob, new KrollDict(args));
+		return ImageFactory.imageRotate(blob, new KrollDict(args));
 	}
 
 	@Kroll.method
 	public TiBlob imageWithAlpha(TiBlob blob, HashMap args)
 	{
-		return imageTransform(TRANSFORM_ALPHA, blob, new KrollDict(args));
+		return ImageFactory.imageAlpha(blob, new KrollDict(args));
 	}
 
 	@Kroll.method
 	public TiBlob imageWithTransparentBorder(TiBlob blob, HashMap args)
 	{
-		return imageTransform(TRANSFORM_TRANSPARENTBORDER, blob, new KrollDict(args));
+		return ImageFactory.imageTransparentBorder(blob, new KrollDict(args));
 	}
 
 	@Kroll.method
 	public TiBlob imageWithRoundedCorner(TiBlob blob, HashMap args)
 	{
-		return imageTransform(TRANSFORM_ROUNDEDCORNER, blob, new KrollDict(args));
+		return ImageFactory.imageRoundedCorner(blob, new KrollDict(args));
 	}
 
 	@Kroll.method
 	public TiBlob imageAsThumbnail(TiBlob blob, HashMap args)
 	{
-		return imageTransform(TRANSFORM_THUMBNAIL, blob, new KrollDict(args));
+		return ImageFactory.imageThumbnail(blob, new KrollDict(args));
 	}
 
 	@Kroll.method
 	public TiBlob imageAsResized(TiBlob blob, HashMap args)
 	{
-		return imageTransform(TRANSFORM_RESIZE, blob, new KrollDict(args));
+		return ImageFactory.imageResize(blob, new KrollDict(args));
 	}
 
 	@Kroll.method
 	public TiBlob imageAsCropped(TiBlob blob, HashMap args)
 	{
-		return imageTransform(TRANSFORM_CROP, blob, new KrollDict(args));
+		return ImageFactory.imageCrop(blob, new KrollDict(args));
+	}
+
+	@Kroll.method
+	public TiBlob imageAsUpright(TiBlob blob, @Kroll.argument(optional = true) HashMap args)
+	{
+		// If given image has a non-upright EXIF orientation, then create a new pre-rotated image.
+		// Otherwise, return the blob as-is if already upright.
+		// Note: New image must have same "format" as original image unless configured differently.
+		TiExifOrientation exifOrientation = TiExifOrientation.from(blob);
+		if ((exifOrientation != null) && (exifOrientation != TiExifOrientation.UPRIGHT)) {
+			KrollDict newArgs = (args != null) ? new KrollDict(args) : new KrollDict();
+			newArgs.put(TiPropertyNames.DEGREES, 0);
+			if (!newArgs.containsKey(TiPropertyNames.FORMAT)) {
+				ImageFormatType formatType = ImageFormatType.fromMimeType(blob.getMimeType());
+				if (formatType != null) {
+					newArgs.put(TiPropertyNames.FORMAT, formatType.toTitaniumIntegerId());
+				}
+			}
+			TiBlob newBlob = ImageFactory.imageRotate(blob, newArgs);
+			if (newBlob != null) {
+				return newBlob;
+			}
+		}
+		return blob;
 	}
 
 	@Kroll.method
 	public TiBlob imageTransform(Object[] args)
 	{
-		Bitmap image = null;
-		if (args[0] instanceof TiBlob) {
-
-			// Use the drawable reference to get the source bitmap
-			TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), (TiBlob) args[0]);
-			image = ref.getBitmap();
-
-			// Apply the transforms one at a time
-			for (int i = 1; i < args.length; i++) {
-				if (args[i] instanceof HashMap) {
-					KrollDict transform = new KrollDict((HashMap) args[i]);
-					int type = transform.optInt("type", TRANSFORM_NONE);
-					Bitmap newImage = imageTransform(type, image, transform);
-					image.recycle();
-					image = null;
-					image = newImage;
-					newImage = null;
-				}
-			}
-			ref = null;
-		}
-
-		if (image == null) {
+		// Validate arguments.
+		if ((args == null) || (args.length < 1) || !(args[0] instanceof TiBlob)) {
 			return null;
 		}
 
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte data[] = new byte[0];
-		// NOTE: While "70" is indeed ignored by the "compress" method, it is there so that in the future if we let the
-		// user decide the final output format and compression, we can remember what the default value is. For now, let
-		// us keep things simple and compress to a png so that we get transparency. Because it is loseless, users can
-		// then turn around and make a call to "compress" if they want it to be a smaller JPEG.
-		if (image.compress(CompressFormat.PNG, 70, bos)) {
-			data = bos.toByteArray();
+		// Fetch the 1st argument's blob and image. This is required.
+		TiBlob blob = (TiBlob) args[0];
+		TiExifOrientation exifOrientation = TiExifOrientation.from(blob);
+		Bitmap bitmap = blob.getImage();
+		if (bitmap == null) {
+			return blob;
 		}
 
-		TiBlob result = TiBlob.blobFromData(data, "image/png");
-		coerceDimensionsIntoBlob(image, result);
+		// Apply all given transformations to the source bitmap.
+		Bitmap newBitmap = bitmap;
+		for (int index = 1; index < args.length; index++) {
+			// Fetch the next argument's options dictionary.
+			KrollDict options;
+			if (args[index] instanceof KrollDict) {
+				options = (KrollDict) args[index];
+			} else if (args[index] instanceof HashMap) {
+				options = new KrollDict((HashMap) args[index]);
+			} else {
+				continue;
+			}
 
-		// [MOD-309] Free up memory to work around issue in Android
-		image.recycle();
-		image = null;
+			// Apply transformation to the image.
+			Bitmap nextBitmap = null;
+			int transformationType = TiConvert.toInt(options.get(TiPropertyNames.TYPE), TRANSFORM_NONE);
+			switch (transformationType) {
+				case TRANSFORM_ALPHA:
+					nextBitmap = ImageFactory.imageAlpha(newBitmap, options, exifOrientation);
+					break;
+				case TRANSFORM_CROP:
+					nextBitmap = ImageFactory.imageCrop(newBitmap, options, exifOrientation);
+					break;
+				case TRANSFORM_RESIZE:
+					nextBitmap = ImageFactory.imageResize(newBitmap, options, exifOrientation);
+					break;
+				case TRANSFORM_ROTATE:
+					nextBitmap = ImageFactory.imageRotate(newBitmap, options, exifOrientation);
+					break;
+				case TRANSFORM_ROUNDEDCORNER:
+					nextBitmap = ImageFactory.imageRoundedCorner(newBitmap, options, exifOrientation);
+					break;
+				case TRANSFORM_THUMBNAIL:
+					nextBitmap = ImageFactory.imageThumbnail(newBitmap, options, exifOrientation);
+					break;
+				case TRANSFORM_TRANSPARENTBORDER:
+					nextBitmap = ImageFactory.imageTransparentBorder(newBitmap, options, exifOrientation);
+					break;
+			}
 
-		return result;
-	}
-
-	@Kroll.method
-	public TiBlob compress(TiBlob blob, float compressionQuality)
-	{
-		TiBlob result = null;
-		Bitmap image = null;
-		ByteArrayOutputStream bos;
-		TiDrawableReference ref;
-
-		try {
-			ref = TiDrawableReference.fromBlob(getActivity(), blob);
-			image = ref.getBitmap();
-			bos = new ByteArrayOutputStream();
-			if (image.compress(CompressFormat.JPEG, (int) (compressionQuality * 100), bos)) {
-				byte[] data = bos.toByteArray();
-				BitmapFactory.Options bfOptions = new BitmapFactory.Options();
-				if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-					bfOptions.inPurgeable = true;
-					bfOptions.inInputShareable = true;
+			// Keep bitmap created above (if successful) and delete the previous bitmap.
+			// Note: Do not delete 1st original source bitmap that was given to this module method.
+			if (nextBitmap != null) {
+				if (newBitmap != bitmap) {
+					newBitmap.recycle();
 				}
-				result = TiBlob.blobFromData(data, "image/jpeg");
-				coerceDimensionsIntoBlob(image, result);
+				newBitmap = nextBitmap;
+				exifOrientation = TiExifOrientation.UPRIGHT;
 			}
-		} catch (OutOfMemoryError e) {
-			Log.e(
-				LCAT,
-				"Received an OutOfMemoryError! The image is too big to compress all at once. Consider using the \"compressToFile\" method instead.");
-		} finally {
-			// [MOD-309] Free up memory to work around issue in Android
-			if (image != null) {
-				image.recycle();
-				image = null;
-			}
-			bos = null;
-			ref = null;
 		}
 
-		return result;
+		// If a new bitmap was created above, compress it to PNG and wrap it in a new blob.
+		if (newBitmap != bitmap) {
+			KrollDict compressOptions = new KrollDict();
+			compressOptions.put(TiPropertyNames.FORMAT, ImageFactoryModule.PNG);
+			blob = ImageFactory.compressToBlob(newBitmap, compressOptions, true);
+		}
+
+		// Return the resulting image blob.
+		return blob;
 	}
 
 	@Kroll.method
-	public boolean compressToFile(TiBlob blob, float compressionQuality, String fileURL)
+	public TiBlob compress(TiBlob blob, float quality, @Kroll.argument(optional = true) Object formatId)
 	{
-		TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), blob);
-		Bitmap image = ref.getBitmap();
-
-		TiBaseFile tiFile = TiFileFactory.createTitaniumFile(fileURL, false);
-		File file = tiFile.getNativeFile();
-
-		BufferedOutputStream bos;
-		try {
-			bos = new BufferedOutputStream(new FileOutputStream(file));
-			if (image.compress(CompressFormat.JPEG, (int) (compressionQuality * 100), bos)) {
-				return true;
-			}
-		} catch (FileNotFoundException e) {
-			return false;
-		} finally {
-			// [MOD-309] Free up memory to work around issue in Android
-			if (image != null) {
-				image.recycle();
-				image = null;
-			}
-			bos = null;
-			ref = null;
+		// Do not continue if not given a blob.
+		if (blob == null) {
+			return null;
 		}
 
-		return false;
+		// Compress blob's image to JPEG with given quality. (Quality range: 0.0 - 1.0)
+		// Calling imageRotate() with degrees 0 forces image to upright position in case it has EXIF orientation.
+		KrollDict args = new KrollDict();
+		args.put(TiPropertyNames.FORMAT, TiConvert.toInt(formatId, ImageFactoryModule.JPEG));
+		args.put(TiPropertyNames.QUALITY, quality);
+		args.put(TiPropertyNames.DEGREES, 0);
+		return ImageFactory.imageRotate(blob, args);
+	}
+
+	@Kroll.method
+	public boolean compressToFile(TiBlob blob, float quality, String fileUrl)
+	{
+		// Validate arguments.
+		if ((blob == null) || (fileUrl == null) || fileUrl.isEmpty()) {
+			return false;
+		}
+
+		// Create a file object from the given URL or file system path.
+		TiBaseFile tiFile = TiFileFactory.createTitaniumFile(fileUrl, false);
+		File file = (tiFile != null) ? tiFile.getNativeFile() : null;
+		if (file == null) {
+			return false;
+		}
+
+		// Extract the extension from the given file URL.
+		String fileExtension = "";
+		int periodIndex = fileUrl.lastIndexOf('.');
+		if ((periodIndex >= 0) && ((periodIndex + 1) < fileUrl.length())) {
+			int slashIndex = fileUrl.lastIndexOf('/');
+			if (slashIndex < periodIndex) {
+				fileExtension = fileUrl.substring(periodIndex + 1);
+			}
+		}
+
+		// Determine the image format based on the given file extension.
+		ImageFormatType formatType = ImageFormatType.fromFileExtension(fileExtension);
+		if (formatType == null) {
+			formatType = ImageFormatType.JPEG;
+		}
+
+		// Write blob's bitmap to file with requested compression format.
+		boolean wasSuccessful = false;
+		try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+			// Make the image upright in case it has an EXIF orientation.
+			// Note: Method will return same blob reference if image is already upright.
+			KrollDict args = new KrollDict();
+			args.put(TiPropertyNames.QUALITY, quality);
+			blob = imageAsUpright(blob, args);
+
+			// Write the image file to the requested format.
+			args.put(TiPropertyNames.FORMAT, formatType.toTitaniumIntegerId());
+			wasSuccessful = ImageFactory.compressToStream(blob.getImage(), args, outputStream);
+		} catch (Throwable ex) {
+			Log.e(TAG, "Failed to compress image to file.", ex);
+		}
+		return wasSuccessful;
+	}
+
+	@Kroll.method
+	public KrollDict metadataFrom(TiBlob blob)
+	{
+		ImageMetadata metadata = ImageMetadata.from(blob);
+		return (metadata != null) ? metadata.getEntries() : null;
 	}
 }

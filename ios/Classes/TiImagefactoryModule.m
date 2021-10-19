@@ -6,6 +6,7 @@
 
 #import "TiImagefactoryModule.h"
 #import "TiBase.h"
+#import "TiBlob.h"
 #import "TiHost.h"
 #import "TiImageFactory.h"
 #import "TiUtils.h"
@@ -144,6 +145,18 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
   return [TiImagefactoryModule imageTransform:kTransformCrop withArgs:args];
 }
 
+- (id)imageAsUpright:(id)args
+{
+  ENSURE_SINGLE_ARG(args, TiBlob);
+  TiBlob *blob = (TiBlob *)args;
+  UIImage *sourceImage = [blob image];
+  UIImage *newImage = [TiImageFactory imageUpright:sourceImage];
+  if (newImage && (newImage != sourceImage)) {
+    blob = [[[TiBlob alloc] initWithImage:newImage] autorelease];
+  }
+  return blob;
+}
+
 - (id)imageTransform:(id)args
 {
   enum Args {
@@ -171,21 +184,68 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
 
 - (id)compress:(id)args
 {
-  enum Args {
-    kArgBlob = 0,
-    kArgCompressionQuality,
-    kArgCount
-  };
+  TiBlob *blob;
+  NSNumber *qualityObject;
+  ENSURE_ARG_AT_INDEX(blob, args, 0, TiBlob);
+  ENSURE_ARG_AT_INDEX(qualityObject, args, 1, NSNumber);
 
-  // Validate correct number of argumetns
-  ENSURE_ARG_COUNT(args, kArgCount);
+  UIImage *image = [blob image];
+  image = [TiImageFactory imageUpright:image];
 
-  id blob = [args objectAtIndex:kArgBlob];
-  ENSURE_TYPE(blob, TiBlob);
-  UIImage *image = [(TiBlob *)blob image];
+  float qualityValue = [TiUtils floatValue:qualityObject def:1.0];
+  return [[[TiBlob alloc] initWithData:UIImageJPEGRepresentation(image, qualityValue) mimetype:@"image/jpeg"] autorelease];
+}
 
-  float compressionQuality = [TiUtils floatValue:[args objectAtIndex:kArgCompressionQuality] def:1.0];
-  return [[[TiBlob alloc] initWithData:UIImageJPEGRepresentation(image, compressionQuality) mimetype:@"image/jpeg"] autorelease];
+- (id)compressToFile:(id)args
+{
+  // Fetch arguments.
+  TiBlob *blob;
+  NSNumber *qualityObject;
+  NSString *filePath;
+  ENSURE_ARG_AT_INDEX(blob, args, 0, TiBlob);
+  ENSURE_ARG_AT_INDEX(qualityObject, args, 1, NSNumber);
+  ENSURE_ARG_AT_INDEX(filePath, args, 2, NSString);
+
+  // Fetch blob's image in upright form.
+  UIImage *image = [blob image];
+  image = [TiImageFactory imageUpright:image];
+
+  // Compress the image to the format specified by the given path's file extension.
+  NSData *compressedData = nil;
+  NSString *fileExtension = [filePath pathExtension];
+  if ([fileExtension caseInsensitiveCompare:@"png"] == 0) {
+    compressedData = UIImagePNGRepresentation(image);
+  } else {
+    float qualityValue = [TiUtils floatValue:qualityObject def:1.0];
+    compressedData = UIImageJPEGRepresentation(image, qualityValue);
+  }
+  if (compressedData == nil) {
+    return NUMBOOL(NO);
+  }
+
+  // Create the directory tree if it doesn't already exist.
+  NSURL *fileUrl = [TiUtils toURL:filePath proxy:self];
+  NSURL *parentDirUrl = [fileUrl URLByDeletingLastPathComponent];
+  [NSFileManager.defaultManager createDirectoryAtURL:parentDirUrl withIntermediateDirectories:YES attributes:nil error:nil];
+
+  // Write to compressed image data to file.
+  NSError *err = nil;
+  [compressedData writeToURL:fileUrl options:NSDataWritingAtomic error:&err];
+  if (err != nil) {
+    NSLog(@"[ERROR] ImageFactory.compressToFile() failed for path \"%@\" - reason: %@", fileUrl, err);
+  }
+  return NUMBOOL(err != nil);
+}
+
+- (id)metadataFrom:(id)args
+{
+  ENSURE_SINGLE_ARG(args, TiBlob);
+  TiBlob *blob = (TiBlob *)args;
+  NSData *imageData = [blob data];
+  CGImageSourceRef sourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, NULL);
+  NSDictionary *exifData = (NSDictionary *)CGImageSourceCopyPropertiesAtIndex(sourceRef, 0, NULL);
+  CFRelease(sourceRef);
+  return [exifData autorelease];
 }
 
 @end

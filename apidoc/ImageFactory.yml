@@ -12,91 +12,78 @@ properties:
     type: Number
     permission: read-only
     value: 0
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_CROP
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 1
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_RESIZE
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 2
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_THUMBNAIL
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 3
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_ROUNDEDCORNER
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 4
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_TRANSPARENTBORDER
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 5
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_ALPHA
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 6
-    platforms: [android, iphone, ipad]
 
   - name: TRANSFORM_ROTATE
     summary: Possible value of the `type` property in the [imageTransform](Modules.ImageFactory.imageTransform) method's varargs options objects
     type: Number
     permission: read-only
     value: 7
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_DEFAULT
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 0
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_NONE
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 1
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_LOW
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 2
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_MEDIUM
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 4
-    platforms: [android, iphone, ipad]
 
   - name: QUALITY_HIGH
     summary: Possible value of the `quality` property in the various image transform methods' options objects
     type: Number
     permission: read-only
     value: 3
-    platforms: [android, iphone, ipad]
 
   - name: JPEG
     summary: Possible value of the `format` property in the various image transform methods' options objects
@@ -112,10 +99,52 @@ properties:
     value: 1
     platforms: [android]
 
+  - name: WEBP
+    summary: Possible value of the `format` property in the various image transform methods' options objects
+    type: Number
+    permission: read-only
+    value: 2
+    platforms: [android]
+
 methods:
+  - name: compress
+    summary: Compresses an image to JPEG and returns it as a new image blob.
+    parameters:
+      - name: blob
+        summary: The image to compress to a JPEG or whatever the optional "format" argument is set to.
+        type: Titanium.Blob
+      - name: quality
+        summary: Compression quality ranging from 0.0 to 1.0.
+        type: Number
+      - name: format
+        summary: The output format of the image. (Only supported on Android. iOS always compresses to JPEG.)
+        type: Number
+        default: Modules.ImageFactory.JPEG
+        constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
+        optional: true
+    returns:
+        type: Titanium.Blob
+
+  - name: compressToFile
+    summary: Compresses the given blob to an image file.
+    parameters:
+      - name: blob
+        summary: Image to to write to file.
+        type: Titanium.Blob
+      - name: quality
+        summary: Compression quality ranging from 0.0 to 1.0.
+        type: Number
+      - name: fileUrl
+        summary: |
+          File path to write the image to. Supports extensions ".png", ".jpg", and ".jpeg".
+          Android also supports ".webp".
+        type: String
+    returns:
+        summary: Returns true if successfully compressed image to file. Returns false if failed.
+        type: Boolean
+
   - name: imageWithRotation
     summary: Creates a new image by creating a copy of the given image that is rotated.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -128,7 +157,6 @@ methods:
 
   - name: imageWithAlpha
     summary: Creates a new image by creating a copy of the given image, adding an alpha channel if it doesn't already have one.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -143,7 +171,6 @@ methods:
     summary: |
         Creates a new image by creating a copy of the given image, adding a transparent border of the given size around its edges.
         The size of the image will be expanded by the specified border size.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -156,7 +183,6 @@ methods:
 
   - name: imageWithRoundedCorner
     summary: Creates a new image by creating a copy of the given image with rounded corners.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -169,7 +195,6 @@ methods:
 
   - name: imageAsThumbnail
     summary: Creates a new image by creating a copy of the given image that is squared to the thumbnail size.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -182,7 +207,6 @@ methods:
 
   - name: imageAsResized
     summary: Creates a new image by creating a copy of the given image that is rescaled to the specified size.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -195,7 +219,6 @@ methods:
   
   - name: imageAsCropped
     summary: Creates a new image by creating a copy of the given image that is cropped to the specified bounds.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -208,7 +231,6 @@ methods:
 
   - name: imageTransform
     summary: Creates a new image by applying a sequence of transformations to the image.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: blob
         summary: Image to transform
@@ -222,7 +244,20 @@ methods:
         type: Object
     returns:
         type: Titanium.Blob
-  
+
+  - name: metadataFrom
+    summary: Gets a dictionary of EXIF metadata from the given blob's image.
+    description: |
+        The returned dictionary's string keys match the "tag" names listed in the specification linked below.
+
+        https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml
+    parameters:
+      - name: blob
+        summary: Image to read EXIF metadata from.
+        type: Titanium.Blob
+    returns:
+        type: Object
+
 ---
 name: RotationOptions
 summary: Shape of the Object passed to the [imageWithRotation](Modules.ImageFactory.imageWithRotation) method
@@ -237,15 +272,15 @@ summary: Shape of the Object passed to the [imageWithAlpha](Modules.ImageFactory
 properties:
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
     platforms: [android]
@@ -259,19 +294,18 @@ properties:
     type: Number
     summary: The size of the border in pixels
     default: 1
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
     platforms: [android]
@@ -285,25 +319,23 @@ properties:
     type: Number
     summary: The size of the border in pixels
     default: 1
-    platforms: [android, iphone, ipad]
 
   - name: cornerRadius
     type: Number
     summary: The radius of the corner edges in pixels
     default: 0
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
     platforms: [android]
@@ -317,32 +349,29 @@ properties:
     type: Number
     summary: The size of the thumbnail in pixels
     default: 48
-    platforms: [android, iphone, ipad]
 
   - name: borderSize
     type: Number
     summary: The size of the border in pixels
     default: 1
-    platforms: [android, iphone, ipad]
 
   - name: cornerRadius
     type: Number
     summary: The radius of the corner edges in pixels
     default: 0
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
         On Android, this is a Float.
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
 
@@ -352,14 +381,13 @@ properties:
         * imagefactory.QUALITY\_LOW
         * imagefactory.QUALITY\_MEDIUM
         * imagefactory.QUALITY\_HIGH
-    platforms: [android, iphone, ipad]
     constants: Modules.ImageFactory.QUALITY_*
     default: 0.7 (android), Modules.ImageFactory.QUALITY_HIGH (ios)
 
   - name: dither
     type: Boolean
-    summary: Indicates if dithering should be applied while scaling. May provide better quality 
-    default: true
+    summary: Indicates if dithering should be applied while scaling.
+    default: false
     platforms: [android]
 
 ---
@@ -371,27 +399,25 @@ properties:
     summary: The width of the resized image in pixels
     default: original image width
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: height
     type: Number
     summary: The height of the resized image in pixels
     default: original image height
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
         On Android, this is a Float.
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
 
@@ -401,7 +427,6 @@ properties:
         * imagefactory.QUALITY\_LOW
         * imagefactory.QUALITY\_MEDIUM
         * imagefactory.QUALITY\_HIGH
-    platforms: [android, iphone, ipad]
     constants: Modules.ImageFactory.QUALITY_*
     default: 0.7 (android), Modules.ImageFactory.QUALITY_HIGH (ios)
 
@@ -419,40 +444,36 @@ properties:
     summary: The width of the resized image in pixels
     default: original image width
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: height
     type: Number
     summary: The height of the resized image in pixels
     default: original image height
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: x
     type: Number
     summary: The x-coordinate of the upper-left corner of the bounds
     default: image center - width / 2
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: y
     type: Number
     summary: The y-coordinate of the upper-left corner of the bounds
     default: image center - height / 2
     optional: true
-    platforms: [android, iphone, ipad]
 
   - name: format
     type: Number
-    summary: The output format of the image - either ImageFactory.PNG or ImageFactory.JPEG
+    summary: The output format of the image.
     default: Modules.ImageFactory.JPEG
-    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG]
+    constants: [Modules.ImageFactory.JPEG, Modules.ImageFactory.PNG, Modules.ImageFactory.WEBP]
     platforms: [android]
 
   - name: quality
     type: Number
     summary: |
-        The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0.
+        The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0.
         The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression
         (or best quality).
     platforms: [android]
