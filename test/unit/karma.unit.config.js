@@ -27,7 +27,7 @@ module.exports = config => {
 			}
 		],
 		titanium: {
-			sdkVersion: config.sdkVersion || '9.3.2.GA'
+			sdkVersion: config.sdkVersion || '11.1.1.GA'
 		},
 		customLaunchers: {
 			android: {
@@ -52,7 +52,7 @@ module.exports = config => {
 		singleRun: true,
 		retryLimit: 0,
 		concurrency: 1,
-		captureTimeout: 300000,
+		captureTimeout: 1000000,
 		logLevel: config.LOG_DEBUG
 	});
 };

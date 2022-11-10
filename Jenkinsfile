@@ -4,7 +4,7 @@ library 'pipeline-library'
 def isMaster = env.BRANCH_NAME.equals('stable')
 
 buildModule {
-	sdkVersion = '9.3.2.GA'
+	sdkVersion = '11.1.1.GA'
 	npmPublish = isMaster
 	iosLabels = 'osx && xcode-12'
 }
