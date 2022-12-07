@@ -1,9 +1,8 @@
-let imagefactory;
-
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 const ANDROID = (Ti.Platform.osname === 'android');
 
 describe('ti.imagefactory', function () {
+	let imagefactory;
 
 	it('can be required', () => {
 		imagefactory = require('ti.imagefactory');
