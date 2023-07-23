@@ -15,30 +15,17 @@
 
 #pragma mark Internal
 
-// this is generated for your module, please do not change it
 - (id)moduleGUID
 {
   return @"0aab25d7-0486-40ab-94a3-ed4f9a293414";
 }
 
-// this is generated for your module, please do not change it
 - (NSString *)moduleId
 {
   return @"ti.imagefactory";
 }
 
-#pragma mark Lifecycle
-
-- (void)startup
-{
-  // this method is called when the module is first loaded
-  // you *must* call the superclass
-  [super startup];
-
-  NSLog(@"[DEBUG] %@ loaded", self);
-}
-
-#pragma system properties
+#pragma System Properties
 
 typedef enum {
   kTransformNone = 0,
@@ -184,24 +171,45 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
 
 - (id)compress:(id)args
 {
-  TiBlob *blob;
-  NSNumber *qualityObject;
-  ENSURE_ARG_AT_INDEX(blob, args, 0, TiBlob);
-  ENSURE_ARG_AT_INDEX(qualityObject, args, 1, NSNumber);
+  if (![args[0] isKindOfClass:[NSDictionary class]]) {
+    DEPRECATED_REPLACED(@"ImageFactory.compress(file, quality)", @"3.0.0", @"ImageFactory.compress({ file, quality, callback })");
 
-  UIImage *image = [blob image];
-  image = [TiImageFactory imageUpright:image];
+    TiBlob *blob = nil;
+    NSNumber *qualityObject = @-1;
+    ENSURE_ARG_AT_INDEX(blob, args, 0, TiBlob);
+    ENSURE_ARG_AT_INDEX(qualityObject, args, 1, NSNumber);
 
-  float qualityValue = [TiUtils floatValue:qualityObject def:1.0];
-  return [[[TiBlob alloc] initWithData:UIImageJPEGRepresentation(image, qualityValue) mimetype:@"image/jpeg"] autorelease];
+    UIImage *image = [blob image];
+    image = [TiImageFactory imageUpright:image];
+
+    float qualityValue = [TiUtils floatValue:qualityObject def:1.0];
+    return [[[TiBlob alloc] initWithData:UIImageJPEGRepresentation(image, qualityValue) mimetype:@"image/jpeg"] autorelease];
+  }
+
+  ENSURE_SINGLE_ARG(args, NSDictionary);
+
+  dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+    TiBlob *blob = args[@"file"];
+    float quality = [TiUtils floatValue:@"quality" properties:args def:1.0];
+    KrollCallback *callback = args[@"callback"];
+
+    UIImage *image = [TiImageFactory imageUpright:[blob image]];
+    TiBlob *result = [[[TiBlob alloc] initWithData:UIImageJPEGRepresentation(image, quality) mimetype:@"image/jpeg"] autorelease];
+
+    TiThreadPerformOnMainThread(
+        ^{
+          [callback call:@[ @{ @"file" : result } ] thisObject:self];
+        },
+        NO);
+  });
 }
 
 - (id)compressToFile:(id)args
 {
   // Fetch arguments.
-  TiBlob *blob;
-  NSNumber *qualityObject;
-  NSString *filePath;
+  TiBlob *blob = nil;
+  NSNumber *qualityObject = @-1;
+  NSString *filePath = nil;
   ENSURE_ARG_AT_INDEX(blob, args, 0, TiBlob);
   ENSURE_ARG_AT_INDEX(qualityObject, args, 1, NSNumber);
   ENSURE_ARG_AT_INDEX(filePath, args, 2, NSString);
