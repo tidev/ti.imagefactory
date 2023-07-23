@@ -32,10 +32,15 @@
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	if ([TiUIImageResize isIOS4OrGreater]) {
 		scale = [image scale];
-		// Force scaling to 2.0
-		if ([TiUtils isRetinaDisplay] && hires) {
-			scale = 2.0;
-		}
+
+		// Force scaling to 2x/3x
+    if (hires) {
+      if ([TiUtils is2xRetina]) {
+        scale = 2.0;
+      }else if ([TiUtils is3xRetina]) {
+        scale = 3.0;
+      }
+    }
 	}
 #endif 
 
@@ -101,10 +106,22 @@
             transform = CGAffineTransformTranslate(transform, 0, newSize.height);
             transform = CGAffineTransformRotate(transform, -M_PI_2);
             break;
+      case UIImageOrientationUp:
+        break;
+      case UIImageOrientationUpMirrored:
+        break;
     }
     
     switch (image.imageOrientation) {
-        case UIImageOrientationUpMirrored:     // EXIF = 2
+      case UIImageOrientationUp:
+        break;
+      case UIImageOrientationDown:
+        break;
+      case UIImageOrientationLeft:
+        break;
+      case UIImageOrientationRight:
+        break;
+      case UIImageOrientationUpMirrored:     // EXIF = 2
         case UIImageOrientationDownMirrored:   // EXIF = 4
             transform = CGAffineTransformTranslate(transform, newSize.width, 0);
             transform = CGAffineTransformScale(transform, -1, 1);

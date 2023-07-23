@@ -15,30 +15,17 @@
 
 #pragma mark Internal
 
-// this is generated for your module, please do not change it
 - (id)moduleGUID
 {
   return @"0aab25d7-0486-40ab-94a3-ed4f9a293414";
 }
 
-// this is generated for your module, please do not change it
 - (NSString *)moduleId
 {
   return @"ti.imagefactory";
 }
 
-#pragma mark Lifecycle
-
-- (void)startup
-{
-  // this method is called when the module is first loaded
-  // you *must* call the superclass
-  [super startup];
-
-  NSLog(@"[DEBUG] %@ loaded", self);
-}
-
-#pragma system properties
+#pragma System Properties
 
 typedef enum {
   kTransformNone = 0,
@@ -184,8 +171,8 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
 
 - (id)compress:(id)args
 {
-  TiBlob *blob;
-  NSNumber *qualityObject;
+  TiBlob *blob = nil;
+  NSNumber *qualityObject = @-1;
   ENSURE_ARG_AT_INDEX(blob, args, 0, TiBlob);
   ENSURE_ARG_AT_INDEX(qualityObject, args, 1, NSNumber);
 
@@ -199,9 +186,9 @@ MAKE_SYSTEM_PROP(QUALITY_HIGH, kCGInterpolationHigh);
 - (id)compressToFile:(id)args
 {
   // Fetch arguments.
-  TiBlob *blob;
-  NSNumber *qualityObject;
-  NSString *filePath;
+  TiBlob *blob = nil;;
+  NSNumber *qualityObject = @-1;
+  NSString *filePath = nil;
   ENSURE_ARG_AT_INDEX(blob, args, 0, TiBlob);
   ENSURE_ARG_AT_INDEX(qualityObject, args, 1, NSNumber);
   ENSURE_ARG_AT_INDEX(filePath, args, 2, NSString);
