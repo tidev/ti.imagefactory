@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
@@ -273,6 +274,26 @@ public class ImageFactoryModule extends KrollModule
 			Log.e(TAG, "Failed to compress image to file.", ex);
 		}
 		return wasSuccessful;
+	}
+
+	@Kroll.method
+	public void compressAsync(KrollDict args) {
+		final ImageFactoryModule that = this;
+
+		TiBlob blob = TiConvert.toBlob(args.get("blob"));
+		float quality = TiConvert.toFloat(args.get("quality"));
+		int formatId = TiConvert.toInt(args.get("format"), ImageFactoryModule.JPEG);
+		KrollFunction callback = (KrollFunction) args.get("success");
+
+		new Thread() {
+			@Override
+			public void run() {
+				TiBlob result = that.compress(blob, quality, formatId);
+				KrollDict map = new KrollDict();
+				map.put("image", result);
+				callback.call(getKrollObject(), map);
+			}
+		}.start();
 	}
 
 	@Kroll.method

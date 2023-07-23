@@ -21,7 +21,7 @@ const ImageFactory = require('ti.imagefactory');
 
 Creates a new image by creating a copy of the given image that is rotated.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to transform
 * Options[dictionary]: A dictionary specifying the options for the transformation
@@ -31,7 +31,7 @@ Creates a new image by creating a copy of the given image that is rotated.
 
 Creates a new image by creating a copy of the given image, adding an alpha channel if it doesn't already have one.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to transform
 * Options[dictionary]: A dictionary specifying the options for the transformation
@@ -43,7 +43,7 @@ Creates a new image by creating a copy of the given image, adding an alpha chann
 
 Creates a new image by creating a copy of the given image, adding a transparent border of the given size around its edges. The size of the image will be expanded by the specified border size.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to transform
 * Options[dictionary]: A dictionary specifying the options for the transformation
@@ -55,7 +55,7 @@ Creates a new image by creating a copy of the given image, adding a transparent 
 
 Creates a new image by creating a copy of the given image with rounded corners.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to transform
 * Options[dictionary]: A dictionary specifying the options for the transformation
@@ -68,7 +68,7 @@ Creates a new image by creating a copy of the given image with rounded corners.
 
 Creates a new image by creating a copy of the given image that is squared to the thumbnail size.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to transform
 * Options[dictionary]: A dictionary specifying the options for the transformation
@@ -89,7 +89,7 @@ Creates a new image by creating a copy of the given image that is squared to the
 
 Creates a new image by creating a copy of the given image that is rescaled to the specified size.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to transform
 * Options[dictionary]: A dictionary specifying the options for the transformation
@@ -109,7 +109,7 @@ Creates a new image by creating a copy of the given image that is rescaled to th
 
 Creates a new image by creating a copy of the given image that is cropped to the specified bounds.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to transform
 * Options[dictionary]: A dictionary specifying the options for the transformation
@@ -124,7 +124,7 @@ Creates a new image by creating a copy of the given image that is cropped to the
 
 Creates a new image by applying a sequence of transformations to the image.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to transform
 * Transform[dictionary]: A sequence of transform specifications. Transforms are listed as additional parameters to the function and are applied in the order specified. Each transform is a dictionary with the options described above for each transform along with an additional 'type' property included with each dictionary of transform options.
@@ -141,17 +141,29 @@ Creates a new image by applying a sequence of transformations to the image.
 
 Creates a new image by creating a copy of the given image and applying the specified compression quality.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to compress
 * Compression Quality[float]; The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality).
 * Android (optional): format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
 
+### compressAsync(Object) - _Android only_
+
+Creates a new image in a new thread by creating a copy of the given image and applying the specified compression quality.
+
+##### Arguments
+
+* object with:
+  * blob [blob]: Image to compress
+  * quality [float]; The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality).
+  * format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
+  * success [function]: Method that will be called when the compressin is done. It will return `image` [blob].
+
 ### compressToFile(blob, quality, fileUrl)
 
 Compresses the given blob to an image file.
 
-#### Arguments
+##### Arguments
 
 * Image blob[blob]: Image to write to file
 * Compression Quality[float]; The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality).
