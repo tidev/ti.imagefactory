@@ -7,9 +7,13 @@
 package ti.imagefactory;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollFunction;
@@ -20,6 +24,7 @@ import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.io.TiBaseFile;
 import org.appcelerator.titanium.io.TiFileFactory;
 import org.appcelerator.titanium.util.TiConvert;
+import org.appcelerator.titanium.view.TiDrawableReference;
 
 @Kroll.module(name = "ImageFactory", id = "ti.imagefactory")
 public class ImageFactoryModule extends KrollModule
@@ -66,16 +71,64 @@ public class ImageFactoryModule extends KrollModule
 	@Kroll.constant
 	public static final int WEBP = ImageFormatType.WEBP.toTitaniumIntegerId();
 
-	@Kroll.method
-	public TiBlob imageWithRotation(TiBlob blob, HashMap args)
+	public TiBlob localImageWithRotation(TiBlob blob, KrollDict args)
 	{
-		return ImageFactory.imageRotate(blob, new KrollDict(args));
+		return ImageFactory.imageRotate(blob, args);
 	}
 
 	@Kroll.method
-	public TiBlob imageWithAlpha(TiBlob blob, HashMap args)
+	public void imageWithRotation(KrollDict args) {
+		final ImageFactoryModule that = this;
+		TiBlob blob = TiConvert.toBlob(args.get("blob"));
+		KrollFunction callback = (KrollFunction) args.get("success");
+		boolean sync = TiConvert.toBoolean(args.get("sync"), false);
+
+		if (sync) {
+			TiBlob result = that.localImageWithRotation(blob, args);
+			KrollDict map = new KrollDict();
+			map.put("image", result);
+			callback.call(getKrollObject(), map);
+		} else {
+			new Thread() {
+				@Override
+				public void run() {
+					TiBlob result = that.localImageWithRotation(blob, args);
+					KrollDict map = new KrollDict();
+					map.put("image", result);
+					callback.call(getKrollObject(), map);
+				}
+			}.start();
+		}
+	}
+
+	public TiBlob localImageWithAlpha(TiBlob blob, KrollDict args)
 	{
-		return ImageFactory.imageAlpha(blob, new KrollDict(args));
+		return ImageFactory.imageAlpha(blob, args);
+	}
+
+	@Kroll.method
+	public void ImageWithAlpha(KrollDict args) {
+		final ImageFactoryModule that = this;
+		TiBlob blob = TiConvert.toBlob(args.get("blob"));
+		KrollFunction callback = (KrollFunction) args.get("success");
+		boolean sync = TiConvert.toBoolean(args.get("sync"), false);
+
+		if (sync) {
+			TiBlob result = that.localImageWithAlpha(blob, args);
+			KrollDict map = new KrollDict();
+			map.put("image", result);
+			callback.call(getKrollObject(), map);
+		} else {
+			new Thread() {
+				@Override
+				public void run() {
+					TiBlob result = that.localImageWithAlpha(blob, args);
+					KrollDict map = new KrollDict();
+					map.put("image", result);
+					callback.call(getKrollObject(), map);
+				}
+			}.start();
+		}
 	}
 
 	@Kroll.method
@@ -90,22 +143,95 @@ public class ImageFactoryModule extends KrollModule
 		return ImageFactory.imageRoundedCorner(blob, new KrollDict(args));
 	}
 
-	@Kroll.method
-	public TiBlob imageAsThumbnail(TiBlob blob, HashMap args)
+	public TiBlob localImageAsThumbnail(TiBlob blob, KrollDict args)
 	{
-		return ImageFactory.imageThumbnail(blob, new KrollDict(args));
+		return ImageFactory.imageThumbnail(blob, args);
 	}
 
 	@Kroll.method
-	public TiBlob imageAsResized(TiBlob blob, HashMap args)
-	{
-		return ImageFactory.imageResize(blob, new KrollDict(args));
+	public void imageAsThumbnail(KrollDict args) {
+		final ImageFactoryModule that = this;
+		TiBlob blob = TiConvert.toBlob(args.get("blob"));
+		KrollFunction callback = (KrollFunction) args.get("success");
+		boolean sync = TiConvert.toBoolean(args.get("sync"), false);
+
+		if (sync) {
+			TiBlob result = that.localImageAsThumbnail(blob, args);
+			KrollDict map = new KrollDict();
+			map.put("image", result);
+			callback.call(getKrollObject(), map);
+		} else {
+			new Thread() {
+				@Override
+				public void run() {
+					TiBlob result = that.localImageAsThumbnail(blob, args);
+					KrollDict map = new KrollDict();
+					map.put("image", result);
+					callback.call(getKrollObject(), map);
+				}
+			}.start();
+		}
 	}
 
 	@Kroll.method
-	public TiBlob imageAsCropped(TiBlob blob, HashMap args)
+	public TiBlob localImageAsResized(TiBlob blob, KrollDict args)
 	{
-		return ImageFactory.imageCrop(blob, new KrollDict(args));
+		return ImageFactory.imageResize(blob, args);
+	}
+
+	@Kroll.method
+	public void imageAsResized(KrollDict args) {
+		final ImageFactoryModule that = this;
+		TiBlob blob = TiConvert.toBlob(args.get("blob"));
+		KrollFunction callback = (KrollFunction) args.get("success");
+		boolean sync = TiConvert.toBoolean(args.get("sync"), false);
+
+		if (sync) {
+			TiBlob result = that.localImageAsResized(blob, args);
+			KrollDict map = new KrollDict();
+			map.put("image", result);
+			callback.call(getKrollObject(), map);
+		} else {
+			new Thread() {
+				@Override
+				public void run() {
+					TiBlob result = that.localImageAsResized(blob, args);
+					KrollDict map = new KrollDict();
+					map.put("image", result);
+					callback.call(getKrollObject(), map);
+				}
+			}.start();
+		}
+	}
+
+	public TiBlob localImageAsCropped(TiBlob blob, KrollDict args)
+	{
+		return ImageFactory.imageCrop(blob, args);
+	}
+
+	@Kroll.method
+	public void imageAsCropped(KrollDict args) {
+		final ImageFactoryModule that = this;
+		TiBlob blob = TiConvert.toBlob(args.get("blob"));
+		KrollFunction callback = (KrollFunction) args.get("success");
+		boolean sync = TiConvert.toBoolean(args.get("sync"), false);
+
+		if (sync) {
+			TiBlob result = that.localImageAsCropped(blob, args);
+			KrollDict map = new KrollDict();
+			map.put("image", result);
+			callback.call(getKrollObject(), map);
+		} else {
+			new Thread() {
+				@Override
+				public void run() {
+					TiBlob result = that.localImageAsCropped(blob, args);
+					KrollDict map = new KrollDict();
+					map.put("image", result);
+					callback.call(getKrollObject(), map);
+				}
+			}.start();
+		}
 	}
 
 	@Kroll.method
@@ -210,14 +336,13 @@ public class ImageFactoryModule extends KrollModule
 		return blob;
 	}
 
-	@Kroll.method
-	public TiBlob compress(TiBlob blob, float quality, @Kroll.argument(optional = true) Object formatId)
+
+	public TiBlob localCompress(TiBlob blob, float quality, @Kroll.argument(optional = true) Object formatId)
 	{
 		// Do not continue if not given a blob.
 		if (blob == null) {
 			return null;
 		}
-
 		// Compress blob's image to JPEG with given quality. (Quality range: 0.0 - 1.0)
 		// Calling imageRotate() with degrees 0 forces image to upright position in case it has EXIF orientation.
 		KrollDict args = new KrollDict();
@@ -277,23 +402,31 @@ public class ImageFactoryModule extends KrollModule
 	}
 
 	@Kroll.method
-	public void compressAsync(KrollDict args) {
+	public void compress(KrollDict args) {
 		final ImageFactoryModule that = this;
 
 		TiBlob blob = TiConvert.toBlob(args.get("blob"));
 		float quality = TiConvert.toFloat(args.get("quality"));
 		int formatId = TiConvert.toInt(args.get("format"), ImageFactoryModule.JPEG);
+		boolean sync = TiConvert.toBoolean(args.get("sync"), false);
 		KrollFunction callback = (KrollFunction) args.get("success");
 
-		new Thread() {
-			@Override
-			public void run() {
-				TiBlob result = that.compress(blob, quality, formatId);
-				KrollDict map = new KrollDict();
-				map.put("image", result);
-				callback.call(getKrollObject(), map);
-			}
-		}.start();
+		if (sync) {
+			TiBlob result = that.localCompress(blob, quality, formatId);
+			KrollDict map = new KrollDict();
+			map.put("image", result);
+			callback.call(getKrollObject(), map);
+		} else {
+			new Thread() {
+				@Override
+				public void run() {
+					TiBlob result = that.localCompress(blob, quality, formatId);
+					KrollDict map = new KrollDict();
+					map.put("image", result);
+					callback.call(getKrollObject(), map);
+				}
+			}.start();
+		}
 	}
 
 	@Kroll.method
@@ -301,5 +434,118 @@ public class ImageFactoryModule extends KrollModule
 	{
 		ImageMetadata metadata = ImageMetadata.from(blob);
 		return (metadata != null) ? metadata.getEntries() : null;
+	}
+
+	public int[] localGetPixelArray(TiBlob blob)
+	{
+		TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), blob);
+		Bitmap bitmap = ref.getBitmap(false,false);
+
+		int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
+		bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+		return pixels;
+	}
+
+	@Kroll.method
+	public void getPixelArray(KrollDict args) {
+		final ImageFactoryModule that = this;
+		TiBlob blob = TiConvert.toBlob(args.get("blob"));
+		KrollFunction callback = (KrollFunction) args.get("success");
+		boolean sync = TiConvert.toBoolean(args.get("sync"), false);
+
+		if (sync) {
+			int[] result = that.localGetPixelArray(blob);
+			KrollDict map = new KrollDict();
+			map.put("pixels", result);
+			callback.call(getKrollObject(), map);
+		} else {
+			new Thread() {
+				@Override
+				public void run() {
+					int[] result = that.localGetPixelArray(blob);
+					KrollDict map = new KrollDict();
+					map.put("pixels", result);
+					callback.call(getKrollObject(), map);
+				}
+			}.start();
+		}
+	}
+
+	private void coerceDimensionsIntoBlob(Bitmap image, TiBlob blob) {
+		try {
+			Field field = TiBlob.class.getDeclaredField("width");
+			field.setAccessible(true);
+			field.setInt(blob, image.getWidth());
+			field = TiBlob.class.getDeclaredField("height");
+			field.setAccessible(true);
+			field.setInt(blob, image.getHeight());
+		} catch (Exception e) {
+			// ** cry **
+		}
+	}
+
+	private TiBlob convertImageToBlob(Bitmap image) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		byte data[] = new byte[0];
+		// NOTE: While "70" is indeed ignored by the "compress" method, it is there so that in the future if we let the
+		// user decide the final output format and compression, we can remember what the default value is. For now, let
+		// us keep things simple and compress to a png so that we get transparency. Because it is loseless, users can
+		// then turn around and make a call to "compress" if they want it to be a smaller JPEG.
+		if (image.compress(Bitmap.CompressFormat.PNG, 70, bos)) {
+			data = bos.toByteArray();
+		}
+
+		TiBlob result = TiBlob.blobFromData(data, "image/png");
+		coerceDimensionsIntoBlob(image, result);
+
+		// [MOD-309] Free up memory to work around issue in Android
+		image.recycle();
+		image = null;
+
+		return result;
+	}
+
+	public TiBlob localResampleImage(String fileName, KrollDict args)
+	{
+		final KrollDict argsDict = new KrollDict(args);
+		final int inSampleSize = argsDict.optInt("inSampleSize", 1);
+		final int inDensity = argsDict.optInt("inDensity", 1);
+		final int inTargetDensity = argsDict.optInt("inTargetDensity", 1);
+
+		final BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+		bitmapOptions.inSampleSize = inSampleSize;
+		bitmapOptions.inDensity = inDensity;
+		bitmapOptions.inTargetDensity = inTargetDensity;
+
+		final Bitmap scaledBitmap = BitmapFactory.decodeFile(fileName, bitmapOptions);
+		scaledBitmap.setDensity(Bitmap.DENSITY_NONE);
+
+		return convertImageToBlob(scaledBitmap);
+	}
+
+	@Kroll.method
+	public void resampleImage(KrollDict args) {
+		final ImageFactoryModule that = this;
+		String fileName = TiConvert.toString(args.get("file"));
+		KrollFunction callback = (KrollFunction) args.get("success");
+		boolean sync = TiConvert.toBoolean(args.get("sync"), false);
+
+		if (sync) {
+			TiBlob result = that.localResampleImage(fileName, args);
+			KrollDict map = new KrollDict();
+			map.put("image", result);
+			callback.call(getKrollObject(), map);
+		} else {
+			new Thread() {
+				@Override
+				public void run() {
+					TiBlob result = that.localResampleImage(fileName, args);
+					KrollDict map = new KrollDict();
+					map.put("image", result);
+					callback.call(getKrollObject(), map);
+				}
+			}.start();
+		}
 	}
 }
