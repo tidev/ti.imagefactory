@@ -23,9 +23,10 @@ Creates a new image by creating a copy of the given image that is rotated.
 
 ##### Arguments
 
-* Image blob[blob]: Image to transform
-* Options[dictionary]: A dictionary specifying the options for the transformation
-    * degrees[int]: The degrees to rotate the image
+* object with:
+  * Image blob[blob]: Image to transform
+  * degrees[int]: The degrees to rotate the image
+  * success [function]: Method that will be called when the compressin is done. It will return `image` [blob].
 
 ### imageWithAlpha(blob, options)
 
@@ -33,11 +34,11 @@ Creates a new image by creating a copy of the given image, adding an alpha chann
 
 ##### Arguments
 
-* Image blob[blob]: Image to transform
-* Options[dictionary]: A dictionary specifying the options for the transformation
-    * iOS: Currently there are no properties for this method -- specify an empty dictionary
-    * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
-    * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+* object with:
+  * Image blob[blob]: Image to transform
+  * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
+  * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+  * success [function]: Method that will be called when the compressin is done. It will return `image` [blob].
 
 ### imageWithTransparentBorder(blob, options)
 
@@ -70,20 +71,21 @@ Creates a new image by creating a copy of the given image that is squared to the
 
 ##### Arguments
 
-* Image blob[blob]: Image to transform
-* Options[dictionary]: A dictionary specifying the options for the transformation
-    * size[int]: The size of the thumbnail (default: 48)
-    * borderSize[int]: The size of the border (default: 1)
-    * cornerRadius[int]: The radius of the corner edges (default:0)
-    * iOS: quality[int]: The interpolation quality. One of the following constants (default: imagefactory.QUALITY\_HIGH)
-        * imagefactory.QUALITY\_DEFAULT
-        * imagefactory.QUALITY\_NONE
-        * imagefactory.QUALITY\_LOW
-        * imagefactory.QUALITY\_MEDIUM
-        * imagefactory.QUALITY\_HIGH
-    * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
-    * Android: dither[boolean]: Indicates if dithering should be applied while scaling. (default: false)
-    * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
+* object with:
+  * Image blob[blob]: Image to transform
+  * size[int]: The size of the thumbnail (default: 48)
+  * borderSize[int]: The size of the border (default: 1)
+  * cornerRadius[int]: The radius of the corner edges (default:0)
+  * iOS: quality[int]: The interpolation quality. One of the following constants (default: imagefactory.QUALITY\_HIGH)
+      * imagefactory.QUALITY\_DEFAULT
+      * imagefactory.QUALITY\_NONE
+      * imagefactory.QUALITY\_LOW
+      * imagefactory.QUALITY\_MEDIUM
+      * imagefactory.QUALITY\_HIGH
+  * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+  * Android: dither[boolean]: Indicates if dithering should be applied while scaling. (default: false)
+  * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
+  * success [function]: Method that will be called when the compressin is done. It will return `image` [blob].
 
 ### imageAsResized(blob, options)
 
@@ -91,19 +93,20 @@ Creates a new image by creating a copy of the given image that is rescaled to th
 
 ##### Arguments
 
-* Image blob[blob]: Image to transform
-* Options[dictionary]: A dictionary specifying the options for the transformation
-    * width[int]: The width of the new image (default: image width)
-    * height[int]: The height of the new image (default: image height)
-    * iOS: hires[boolean]: Create a hires image (for Retina displays only)
-    * iOS: quality[int]: The interpolation quality. One of the following constants (default: imagefactory.QUALITY\_HIGH)
-        * imagefactory.QUALITY\_DEFAULT
-        * imagefactory.QUALITY\_NONE
-        * imagefactory.QUALITY\_LOW
-        * imagefactory.QUALITY\_MEDIUM
-        * imagefactory.QUALITY\_HIGH
-    * Android. format [int]: The output format of the image: either ImageFactory.PNG or ImageFactory.JPEG (default: ImageFactory.JPEG)
-    * quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+* object with:
+  * Image blob[blob]: Image to transform
+  * width[int]: The width of the new image (default: image width)
+  * height[int]: The height of the new image (default: image height)
+  * iOS: hires[boolean]: Create a hires image (for Retina displays only)
+  * iOS: quality[int]: The interpolation quality. One of the following constants (default: imagefactory.QUALITY\_HIGH)
+      * imagefactory.QUALITY\_DEFAULT
+      * imagefactory.QUALITY\_NONE
+      * imagefactory.QUALITY\_LOW
+      * imagefactory.QUALITY\_MEDIUM
+      * imagefactory.QUALITY\_HIGH
+  * Android. format [int]: The output format of the image: either ImageFactory.PNG or ImageFactory.JPEG (default: ImageFactory.JPEG)
+  * quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+  * success [function]: Method that will be called when the compressin is done. It will return `image` [blob].
 
 ### imageAsCropped(blob, options)
 
@@ -111,14 +114,15 @@ Creates a new image by creating a copy of the given image that is cropped to the
 
 ##### Arguments
 
-* Image blob[blob]: Image to transform
-* Options[dictionary]: A dictionary specifying the options for the transformation
-    * width[int]: The width of the new image (default: image width)
-    * height[int]: The height of the new image (default: image height)
-    * x[int]: The x-coordinate of the upper-left corner of the bounds (default: image center - width / 2)
-    * y[int]: The y-coordinate of the upper-left corner of the bounds (default: image center - height / 2)
-    * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
-    * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+* object with:
+  * Image blob[blob]: Image to transform
+  * width[int]: The width of the new image (default: image width)
+  * height[int]: The height of the new image (default: image height)
+  * x[int]: The x-coordinate of the upper-left corner of the bounds (default: image center - width / 2)
+  * y[int]: The y-coordinate of the upper-left corner of the bounds (default: image center - height / 2)
+  * Android: format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
+  * Android: quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
+  * success [function]: Method that will be called when the compressin is done. It will return `image` [blob].  
 
 ### imageTransform(blob, options)
 
@@ -140,16 +144,6 @@ Creates a new image by applying a sequence of transformations to the image.
 ### compress(blob, quality [, format])
 
 Creates a new image by creating a copy of the given image and applying the specified compression quality.
-
-##### Arguments
-
-* Image blob[blob]: Image to compress
-* Compression Quality[float]; The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality).
-* Android (optional): format [int]: The output format: ImageFactory.JPEG, ImageFactory.PNG, ImageFactory.WEBP (default: ImageFactory.JPEG)
-
-### compressAsync(Object) - _Android only_
-
-Creates a new image in a new thread by creating a copy of the given image and applying the specified compression quality.
 
 ##### Arguments
 
