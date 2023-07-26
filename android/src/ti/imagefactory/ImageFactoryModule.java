@@ -107,7 +107,7 @@ public class ImageFactoryModule extends KrollModule
 	}
 
 	@Kroll.method
-	public void ImageWithAlpha(KrollDict args) {
+	public void imageWithAlpha(KrollDict args) {
 		final ImageFactoryModule that = this;
 		TiBlob blob = TiConvert.toBlob(args.get("blob"));
 		KrollFunction callback = (KrollFunction) args.get("success");
