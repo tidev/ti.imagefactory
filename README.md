@@ -103,7 +103,7 @@ Creates a new image by creating a copy of the given image that is rescaled to th
         * imagefactory.QUALITY\_MEDIUM
         * imagefactory.QUALITY\_HIGH
     * Android. format [int]: The output format of the image: either ImageFactory.PNG or ImageFactory.JPEG (default: ImageFactory.JPEG)
-    * Android. backgroundColor [int]: Background color of the resized image e.g. when using a transparent PNG (default: Black)
+    * Android. backgroundColor [int]: Background color of the resized image e.g. when using a transparent PNG that you want to convert to a JPEG.
     * quality[float]: The quality of the resulting JPEG or WebP image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). (default: 0.7)
 
 ### imageAsCropped(blob, options)
