@@ -9,6 +9,7 @@ package ti.imagefactory;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -18,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.common.Log;
+import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.util.TiConvert;
 
@@ -33,7 +35,16 @@ public class ImageFactory
 		args = updateFormatOption(args, blob.getMimeType(), false);
 		Bitmap oldBitmap = blob.getImage();
 		Bitmap newBitmap = imageRotate(oldBitmap, args, TiExifOrientation.from(blob));
-		return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
+
+		if (args.containsKeyAndNotNull("backgroundColor")) {
+			Bitmap mutableBitmap = newBitmap.copy(Bitmap.Config.ARGB_8888, true);
+			Canvas canvas = new Canvas(mutableBitmap);
+			canvas.drawColor(TiConvert.toColor(args.get("backgroundColor"), TiApplication.getAppRootOrCurrentActivity()));
+			canvas.drawBitmap(newBitmap, 0F, 0F, null);
+			return compressToBlob(mutableBitmap, args, (newBitmap != oldBitmap));
+		} else {
+			return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
+		}
 	}
 
 	public static Bitmap imageRotate(Bitmap bitmap, KrollDict args, TiExifOrientation exifOrientation)
@@ -147,7 +158,17 @@ public class ImageFactory
 		args = updateFormatOption(args, blob.getMimeType(), false);
 		Bitmap oldBitmap = blob.getImage();
 		Bitmap newBitmap = imageResize(oldBitmap, args, TiExifOrientation.from(blob));
-		return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
+
+		if (args.containsKeyAndNotNull("backgroundColor")) {
+			Bitmap mutableBitmap = newBitmap.copy(Bitmap.Config.ARGB_8888, true);
+			Canvas canvas = new Canvas(mutableBitmap);
+			canvas.drawColor(TiConvert.toColor(args.get("backgroundColor"), TiApplication.getAppRootOrCurrentActivity()));
+			canvas.drawBitmap(newBitmap, 0F, 0F, null);
+			return compressToBlob(mutableBitmap, args, (newBitmap != oldBitmap));
+		} else {
+			return compressToBlob(newBitmap, args, (newBitmap != oldBitmap));
+		}
+
 	}
 
 	public static Bitmap imageResize(Bitmap bitmap, KrollDict args, TiExifOrientation exifOrientation)
